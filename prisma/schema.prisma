@@ -1,0 +1,513 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth Required Models
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  name             String?
+  email            String    @unique
+  emailVerified    DateTime?
+  image            String?
+  password         String?
+  phone            String?
+  phoneVerified    DateTime?
+  role             String    @default("customer") // 'admin' | 'customer'
+  status           String    @default("active") // 'active' | 'banned'
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  accounts         Account[]
+  sessions         Session[]
+  addresses        Address[]
+  orders           Order[]
+  cart             Cart?
+  reviews          ProductReview[]
+  chats            Chat[]
+  messages         Message[]
+  supportTickets   SupportTicket[]
+  supportMessages  SupportMessage[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Product Models
+model Product {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  description     String?
+  price           Float
+  originalPrice   Float?
+  image           String?
+  category        String
+  inStock         Boolean   @default(true)
+  featured        Boolean   @default(false)
+  weight          String?
+  ingredients     String[]
+  nutritionalInfo Json?
+  averageRating   Float?    @default(0)
+  reviewCount     Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  images        ProductImage[]
+  reviews       ProductReview[]
+  cartItems     CartItem[]
+  orderItems    OrderItem[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String   @db.ObjectId
+  url          String
+  altText      String?
+  isPrimary    Boolean  @default(false)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+model ProductReview {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String   @db.ObjectId
+  userId    String   @db.ObjectId
+  rating    Int // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("product_reviews")
+}
+
+// Cart Models
+model Cart {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  cartId    String   @db.ObjectId
+  productId String   @db.ObjectId
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+// Order Models
+model Order {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  orderNumber     String   @unique
+  status          String   @default("pending") // 'pending' | 'confirmed' | 'preparing' | 'shipped' | 'delivered' | 'cancelled'
+  paymentStatus   String   @default("pending") // 'pending' | 'paid' | 'failed' | 'refunded'
+  paymentMethod   String // 'cod' | 'online'
+  subtotal        Float
+  discount        Float    @default(0)
+  deliveryCharge  Float    @default(0)
+  total           Float
+  couponCode      String?
+  addressId       String   @db.ObjectId
+  notes           String?
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  address        Address         @relation(fields: [addressId], references: [id])
+  items          OrderItem[]
+  chats          Chat[]
+  supportTickets SupportTicket[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String  @db.ObjectId
+  productId String  @db.ObjectId
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// Address Model
+model Address {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  name      String
+  phone     String
+  street    String
+  city      String
+  state     String
+  pincode   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@map("addresses")
+}
+
+// Coupon Model
+model Coupon {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  code             String    @unique
+  discountType     String // 'percentage' | 'fixed'
+  discountValue    Float
+  minOrderValue    Float?
+  maxDiscount      Float?
+  usageLimit       Int?
+  usedCount        Int       @default(0)
+  validFrom        DateTime
+  validTo          DateTime
+  isActive         Boolean   @default(true)
+  description      String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@map("coupons")
+}
+
+// Banner Model
+model Banner {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  image        String
+  link         String?
+  buttonText   String?
+  isActive     Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("banners")
+}
+
+// Chat/Support Models
+model Chat {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  orderId   String?  @db.ObjectId
+  subject   String
+  status    String   @default("open") // 'open' | 'resolved' | 'closed'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order    Order?    @relation(fields: [orderId], references: [id])
+  messages Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  chatId    String   @db.ObjectId
+  userId    String   @db.ObjectId
+  message   String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
+
+// Support Ticket Models
+model SupportTicket {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  orderId   String   @db.ObjectId
+  subject   String
+  priority  String   @default("medium") // 'low' | 'medium' | 'high' | 'urgent'
+  status    String   @default("open") // 'open' | 'closed' | 'resolved'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order    Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  messages SupportMessage[]
+
+  @@map("support_tickets")
+}
+
+model SupportMessage {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  ticketId     String   @db.ObjectId
+  userId       String   @db.ObjectId
+  message      String
+  isAdminReply Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("support_messages")
+}
+
+// Payment Configuration Model
+model PaymentConfig {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  razorpayKeyId   String?
+  razorpayKeySecret String?
+  isTestMode      Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payment_config")
+}
+
+// Newsletter Subscriber Model
+model Newsletter {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  email           String   @unique
+  name            String?
+  isActive        Boolean  @default(true)
+  preferences     String[] @default(["offers"]) // new-products, offers, festivals, recipes, events
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime? @updatedAt
+
+  emailLogs       EmailLog[]
+
+  @@map("newsletters")
+}
+
+// Newsletter Campaign Model - for bulk emails sent
+model NewsletterCampaign {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  subject         String
+  templateId      String   @db.ObjectId // Reference to template
+  template        NewsletterTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  content         String   // Rendered HTML content
+  recipients      String[] // Array of emails sent to
+  recipientCount  Int      @default(0)
+  sentCount       Int      @default(0)
+  openCount       Int      @default(0)
+  clickCount      Int      @default(0)
+  bounceCount     Int      @default(0)
+  type            String   @default("newsletter") // 'newsletter' | 'promotion' | 'announcement'
+  status          String   @default("draft") // 'draft' | 'scheduled' | 'sent' | 'failed'
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  emailLogs       EmailLog[]
+  clicks          EmailClick[]
+
+  @@map("newsletter_campaigns")
+}
+
+// Newsletter Template Model - for creating email templates
+model NewsletterTemplate {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  subject         String
+  htmlContent     String   // HTML template with shortcodes like {{NAME}}, {{DISCOUNT}}, etc.
+  textContent     String?  // Plain text version
+  category        String   @default("general") // 'general' | 'promotion' | 'announcement' | 'welcome'
+  shortcodes      String[] // Available shortcodes in this template
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  campaigns       NewsletterCampaign[]
+
+  @@map("newsletter_templates")
+}
+
+// SMTP Configuration Model - for email sending
+model SMTPConfig {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  provider        String   @default("custom") // 'custom', 'gmail', 'sendgrid', etc.
+  host            String
+  port            Int      @default(587)
+  secure          Boolean  @default(true)
+  username        String
+  password        String
+  fromEmail       String
+  fromName        String   @default("Athrayapuram")
+  isActive        Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("smtp_configs")
+}
+
+// Email Log Model - for tracking sent emails
+model EmailLog {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  subscriberId    String   @db.ObjectId
+  subscriber      Newsletter @relation(fields: [subscriberId], references: [id], onDelete: Cascade)
+  campaignId      String   @db.ObjectId
+  campaign        NewsletterCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  email           String
+  subject         String
+  status          String   @default("pending") // 'pending' | 'sent' | 'delivered' | 'bounced' | 'opened' | 'failed'
+  errorMessage    String?
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  openedAt        DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  clicks          EmailClick[]
+
+  @@map("email_logs")
+}
+
+// Email Click Tracking Model - for analytics
+model EmailClick {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  emailLogId      String   @db.ObjectId
+  emailLog        EmailLog @relation(fields: [emailLogId], references: [id], onDelete: Cascade)
+  campaignId      String   @db.ObjectId
+  campaign        NewsletterCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  linkUrl         String
+  clickedAt       DateTime @default(now())
+
+  @@map("email_clicks")
+}
+
+// Site Settings Model - for dynamic images and content
+model SiteSettings {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  headerLogoUrl         String?  @default("/placeholder-logo.svg") // Header logo
+  heroSectionImageUrl   String?  @default("/traditional-indian-sweet-putharekulu.jpg") // Hero section right image
+  whyGodavariImageUrl   String?  @default("/homepage-about-section.jpg") // Why Godavari Delights section image
+  updatedAt             DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// Bulk Order Model
+model BulkOrder {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String
+  phone       String
+  company     String?
+  productName String
+  quantity    Int      // Number of boxes/units
+  message     String
+  status      String   @default("pending") // 'pending' | 'approved' | 'rejected' | 'completed'
+  adminNotes  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("bulk_orders")
+}
+
+// OTP Model for Phone Authentication
+model OTP {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  phone     String   @unique
+  otp       String
+  attempts  Int      @default(0)
+  maxAttempts Int   @default(5)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+
+  @@map("otps")
+}
+
+// SMS Configuration Model
+model SMSConfig {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  provider        String  @default("fast2sms") // 'fast2sms'
+  apiKey          String
+  smsType         String  @default("quick") // 'quick' | 'dlt'
+  // DLT Configuration
+  dlcSenderId     String?  // DLT-approved 3-6 letter Sender ID
+  dlcTemplateId   String?  // DLT Content Template ID like "1110000001111"
+  dlcEntityId     String?  // DLT Principal Entity ID
+  dlcMessageId    String?  // Message_ID for DLT SMS (used in GET DLT API)
+  isActive        Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("sms_configs")
+}
