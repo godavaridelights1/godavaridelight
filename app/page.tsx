@@ -142,6 +142,33 @@ const categoryDescriptionMap: Record<string, string> = {
   gifts: 'Beautifully packed gift hampers for every occasion',
 }
 
+const STATIC_CATEGORIES = [
+  {
+    id: 'traditional',
+    name: 'Traditional',
+    description: 'Classic handmade Putharekulu with authentic recipes',
+    image: '/traditional-indian-sweet-putharekulu.jpg',
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    description: 'Exclusive premium Putharekulu with dry fruits & saffron',
+    image: '/premium-gift.png',
+  },
+  {
+    id: 'festival',
+    name: 'Festival',
+    description: 'Special festival collections for every celebration',
+    image: '/festival-indian-sweets-diwali.jpg',
+  },
+  {
+    id: 'gifts',
+    name: 'Gift Hampers',
+    description: 'Beautifully packed gift hampers for every occasion',
+    image: '/image_0901.jpeg',
+  },
+]
+
 async function getCategories() {
   try {
     // Get unique categories from products
@@ -155,9 +182,11 @@ async function getCategories() {
 
     const uniqueCategories = products.map((p: any) => p.category).filter(Boolean)
 
+    if (uniqueCategories.length === 0) return STATIC_CATEGORIES
+
     // Create category objects with mapped images
     return uniqueCategories.map((cat: string) => {
-      const key = cat.toLowerCase()
+      const key = cat.toLowerCase().trim()
       return {
         id: cat || '',
         name: cat || '',
@@ -167,7 +196,7 @@ async function getCategories() {
     })
   } catch (error) {
     console.error('Error fetching categories:', error)
-    return []
+    return STATIC_CATEGORIES
   }
 }
 
@@ -207,7 +236,7 @@ export default async function HomePage() {
                     {" "}
                     Putharekulu{" "}
                   </span>
-                  from Athrayapuram
+                  from Atreyapuram
                 </h1>
                 <p className="text-lg text-muted-foreground text-pretty">
                   Experience the authentic taste of handmade Putharekulu, crafted with traditional recipes passed down
@@ -301,28 +330,30 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {categories.map((category: any, index: number) => (
+              {STATIC_CATEGORIES.map((category: any, index: number) => (
                 <FadeInSection key={category.id} delay={index * 100}>
-                  <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:rotate-1">
-                    <div className="relative aspect-square overflow-hidden">
-                      <Image
-                        src={category.image || "/placeholder.svg"}
-                        alt={category.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110 group-hover:rotate-2"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Link href={`/products?category=${category.id}`}>
+                    <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:rotate-1">
+                      <div className="relative aspect-square overflow-hidden">
+                        <Image
+                          src={category.image}
+                          alt={category.name}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110 group-hover:rotate-2"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                      <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"></div>
-                      <div className="absolute bottom-4 left-4 w-1 h-1 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
-                    </div>
-                    <CardContent className="p-4 text-center">
-                      <h3 className="font-semibold mb-2 group-hover:text-orange-600 transition-colors duration-300">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">{category.description}</p>
-                    </CardContent>
-                  </Card>
+                        <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"></div>
+                        <div className="absolute bottom-4 left-4 w-1 h-1 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
+                      </div>
+                      <CardContent className="p-4 text-center">
+                        <h3 className="font-semibold mb-2 group-hover:text-orange-600 transition-colors duration-300">
+                          {category.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">{category.description}</p>
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </FadeInSection>
               ))}
             </div>
