@@ -87,6 +87,15 @@ export function Footer() {
               <Link href="/contact" className="block text-sm text-muted-foreground hover:text-primary">
                 Contact
               </Link>
+              <Link href="/privacy-policy" className="block text-sm text-muted-foreground hover:text-primary">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="block text-sm text-muted-foreground hover:text-primary">
+                Terms &amp; Conditions
+              </Link>
+              <Link href="/refund-policy" className="block text-sm text-muted-foreground hover:text-primary">
+                Return &amp; Refund Policy
+              </Link>
             </div>
           </div>
 
@@ -155,6 +164,14 @@ export function Footer() {
               <span className="text-sm font-bold text-orange-700">© 2025, Godavari Delights</span>
               <span className="text-gray-300 text-lg">|</span>
               <span className="text-sm font-bold text-orange-700">godavaridelights.in</span>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+              <Link href="/privacy-policy" className="hover:text-orange-600 transition-colors">Privacy Policy</Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/terms" className="hover:text-orange-600 transition-colors">Terms &amp; Conditions</Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/refund-policy" className="hover:text-orange-600 transition-colors">Return &amp; Refund Policy</Link>
             </div>
             
             <p className="text-xl font-bold bg-gradient-to-r from-orange-600 via-amber-600 to-orange-600 bg-clip-text text-transparent animate-pulse">
