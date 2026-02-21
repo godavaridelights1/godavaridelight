@@ -62,7 +62,7 @@ export default function AboutPage() {
             </div>
             <div className="relative w-full">
               <Image
-                src="/traditional-putharekulu-sweet.jpg"
+                src="/hero-product.jpeg"
                 alt="Traditional Putharekulu Making"
                 width={600}
                 height={400}
@@ -208,15 +208,15 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl font-bold text-orange-600">AP</span>
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">SKM</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base md:text-lg">Artisan Team</h3>
-                  <p className="text-sm text-muted-foreground">Handcraft Experts</p>
+                  <h3 className="font-semibold text-base md:text-lg">Sai Krishna Madhav</h3>
+                  <p className="text-sm text-muted-foreground">Co-Founder</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Skilled artisans who handcraft every Putharekulu sheet with patience and expertise, preserving
-                  the time-honored techniques of Konaseema.
+                  Expanded the business while maintaining traditional quality and introducing modern hygiene
+                  standards and secure packaging techniques.
                 </p>
               </CardContent>
             </Card>
@@ -224,15 +224,15 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl font-bold text-orange-600">GD</span>
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">CN</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base md:text-lg">Godavari Delights</h3>
-                  <p className="text-sm text-muted-foreground">Our Promise</p>
+                  <h3 className="font-semibold text-base md:text-lg">Chandu Nadipalli</h3>
+                  <p className="text-sm text-muted-foreground">Co-Founder</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Combining traditional recipes with modern hygiene standards and secure packaging to deliver
-                  authentic sweetness from Konaseema directly to your home.
+                  Combining traditional recipes with modern standards to deliver the authentic sweetness of
+                  Konaseema Putharekulu directly to your home.
                 </p>
               </CardContent>
             </Card>
