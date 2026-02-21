@@ -16,12 +16,12 @@ export default function AboutPage() {
           <div className="text-center space-y-4 md:space-y-6">
             <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Our Story</Badge>
             <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight">
-              Three Generations of
-              <span className="text-orange-600"> Sweet Tradition</span>
+              Authentic Atreyapuram
+              <span className="text-orange-600"> Putharekulu</span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-              From a small village kitchen in Atreyapuram to serving customers across India, our journey has been
-              sweetened by tradition, quality, and the love of our customers.
+              From a small family effort in Atreyapuram, East Godavari, Konaseema, to delivering authentic sweetness
+              across India — a tradition of taste, crafted with care since 2000.
             </p>
           </div>
         </div>
@@ -32,22 +32,32 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="space-y-4 md:space-y-6">
-              <h2 className="text-2xl md:text-3xl font-bold">Our Heritage</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">
+                Our Story –{" "}
+                <span className="text-orange-600">The Taste of Authentic Atreyapuram Putharekulu</span>
+              </h2>
               <p className="text-muted-foreground">
-                Established in 1950 by our founder Shri Rama Krishna, Atreyapuram Putharekulu began as a small family
-                business in the heart of West Godavari district. What started as a passion for creating the perfect
-                Putharekulu has now become a legacy that spans three generations.
+                Established in 2000 by our founder <strong>Ganesh</strong> in Atreyapuram, East Godavari, Konaseema,
+                our journey began with a simple vision — to share the authentic taste of traditional Atreyapuram
+                Putharekulu with everyone.
               </p>
               <p className="text-muted-foreground">
-                Our traditional recipes have been carefully preserved and passed down through generations, ensuring that
-                every bite of our Putharekulu carries the authentic taste that our grandparents cherished. We use only
-                the finest ingredients - pure ghee, organic jaggery, and premium rice flour - sourced directly from
-                local farmers.
+                What started as a small family effort has grown steadily through dedication, hard work, and a passion
+                for preserving tradition. From the very beginning, our focus has been on maintaining the original
+                preparation methods that make Atreyapuram Putharekulu special and unique.
               </p>
               <p className="text-muted-foreground">
-                Today, under the guidance of the third generation, we continue to honor our heritage while embracing
-                modern hygiene standards and packaging techniques to bring the authentic taste of Atreyapuram to your
-                doorstep.
+                We prepare every Putharekulu using carefully selected rice flour, pure ghee, and high-quality jaggery,
+                ensuring rich taste and premium quality in every bite. Each sheet is handmade with patience and
+                expertise, following the time-honored techniques that define the true flavor of Konaseema.
+              </p>
+              <p className="text-muted-foreground">
+                Today, we proudly continue our founder Ganesh's vision by combining traditional recipes with modern
+                hygiene standards and secure packaging. Our mission is to deliver the authentic sweetness of
+                Atreyapuram Putharekulu from East Godavari, Konaseema, directly to your home.
+              </p>
+              <p className="text-orange-700 font-semibold italic">
+                A tradition of taste, crafted with care.
               </p>
             </div>
             <div className="relative w-full">
@@ -182,15 +192,15 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl font-bold text-orange-600">RK</span>
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">G</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base md:text-lg">Rama Krishna</h3>
-                  <p className="text-sm text-muted-foreground">Founder (1950)</p>
+                  <h3 className="font-semibold text-base md:text-lg">Ganesh</h3>
+                  <p className="text-sm text-muted-foreground">Founder (2000)</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Started the legacy with a passion for creating the perfect Putharekulu using traditional family
-                  recipes.
+                  Started the legacy in Atreyapuram, East Godavari, Konaseema with a vision to share authentic
+                  traditional Putharekulu with everyone.
                 </p>
               </CardContent>
             </Card>
@@ -198,14 +208,15 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl font-bold text-orange-600">VK</span>
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">AP</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base md:text-lg">Venkata Krishna</h3>
-                  <p className="text-sm text-muted-foreground">Second Generation</p>
+                  <h3 className="font-semibold text-base md:text-lg">Artisan Team</h3>
+                  <p className="text-sm text-muted-foreground">Handcraft Experts</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Expanded the business while maintaining traditional quality and introducing modern hygiene standards.
+                  Skilled artisans who handcraft every Putharekulu sheet with patience and expertise, preserving
+                  the time-honored techniques of Konaseema.
                 </p>
               </CardContent>
             </Card>
@@ -213,15 +224,15 @@ export default function AboutPage() {
             <Card className="text-center">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-xl md:text-2xl font-bold text-orange-600">SK</span>
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">GD</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-base md:text-lg">Sai Krishna</h3>
-                  <p className="text-sm text-muted-foreground">Current Owner</p>
+                  <h3 className="font-semibold text-base md:text-lg">Godavari Delights</h3>
+                  <p className="text-sm text-muted-foreground">Our Promise</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Leading the third generation with innovation while preserving the authentic taste and family
-                  traditions.
+                  Combining traditional recipes with modern hygiene standards and secure packaging to deliver
+                  authentic sweetness from Konaseema directly to your home.
                 </p>
               </CardContent>
             </Card>
