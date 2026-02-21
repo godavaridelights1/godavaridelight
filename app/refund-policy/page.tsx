@@ -1,5 +1,7 @@
 import { Metadata } from "next"
 import { PackageCheck, RefreshCcw, CreditCard, Truck } from "lucide-react"
+import { Header } from "@/components/header"
+import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Return & Refund Policy | Godavari Delights",
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
 export default function RefundPolicyPage() {
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         {/* Header */}
         <div className="mb-10 text-center">
@@ -138,6 +141,7 @@ export default function RefundPolicyPage() {
 
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
