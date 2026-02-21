@@ -44,9 +44,9 @@ export default function ContactPage() {
                   <p className="text-sm text-muted-foreground">
                     Atreyapuram Village
                     <br />
-                    West Godavari District
+                    East Godavari Konaseema District,
                     <br />
-                    Andhra Pradesh - 534134
+                    Andhra Pradesh - 533235
                   </p>
                 </div>
               </CardContent>
@@ -60,9 +60,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Call Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    +91 9876543210
-                    <br />
-                    +91 8765432109
+                    +91 9885469456
                     <br />
                     Mon-Sat: 9AM-7PM
                   </p>
@@ -112,15 +110,25 @@ export default function ContactPage() {
                   <CardTitle>Find Us</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                    <p className="text-muted-foreground">Interactive Map Coming Soon</p>
+                  <div className="w-full rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3822.5!2d81.9167!3d16.6833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a37c5b5b5b5b5b5%3A0x0!2sAtreyapuram%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                      width="100%"
+                      height="280"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="rounded-lg"
+                      title="Godavari Delights Location - Atreyapuram"
+                    />
                   </div>
                   <div className="mt-4 space-y-2">
                     <p className="text-sm text-muted-foreground">
-                      <strong>Address:</strong> Atreyapuram Village, West Godavari District, Andhra Pradesh - 534134
+                      <strong>Address:</strong> Atreyapuram Village, East Godavari Konaseema District, Andhra Pradesh - 533235
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      <strong>Landmark:</strong> Near Atreyapuram Bus Stand, opposite to Sri Rama Temple
+                      <strong>Landmark:</strong> Near Atreyapuram, opposite to SBI Bank
                     </p>
                   </div>
                 </CardContent>
