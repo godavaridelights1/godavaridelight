@@ -134,7 +134,7 @@ export function ProductFAQ({ productName, faqs }: ProductFAQProps) {
       <div className="mt-8 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-lg border border-orange-200">
         <p className="text-sm text-gray-800">
           <span className="font-semibold text-orange-700">Didn't find your answer?</span>
-          {" "}Contact us at support@godavaridelights.in or call +91-XXXX-XXXX for assistance.
+Contact us through contact page.
         </p>
       </div>
     </div>

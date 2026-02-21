@@ -134,9 +134,7 @@ export function Footer() {
               <div className="flex items-start space-x-2">
                 <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div className="text-sm text-muted-foreground">
-                  <p>Atreyapuram Village,</p>
-                  <p>West Godavari District,</p>
-                  <p>Andhra Pradesh - 534134</p>
+                  Atreyapuram village <br/>east godavari district, <br/>Andhrapradesh -533235
                 </div>
               </div>
               <div className="flex items-center space-x-2">
