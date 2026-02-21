@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: "Godavari Delights - Traditional Andhra Sweets",
   description:
     "Authentic handmade Putharekulu from Athrayapuram. Premium quality traditional Andhra Pradesh sweets made with pure ingredients.",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 }
 
 export default function RootLayout({
