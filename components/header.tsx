@@ -40,7 +40,7 @@ export function Header() {
               </div>
               <div className="flex items-center gap-1">
                 <Mail className="h-3 w-3" />
-                <span>info@athrayapuram.com</span>
+                <span>godavaridelights1@gmail.com</span>
               </div>
             </div>
             <div className="hidden md:block">

@@ -78,11 +78,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Email Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    info@athrayapuram.com
-                    <br />
-                    orders@athrayapuram.com
-                    <br />
-                    support@athrayapuram.com
+                    godavaridelights1@gmail.com
                   </p>
                 </div>
               </CardContent>

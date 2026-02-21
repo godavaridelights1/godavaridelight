@@ -599,7 +599,7 @@ export default function AdminProductsPage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Traditional Putharekulu">Traditional Putharekulu</SelectItem>
+                        <SelectItem value=""></SelectItem>
                         <SelectItem value="Premium Collection">Premium Collection</SelectItem>
                         <SelectItem value="Festival Specials">Festival Specials</SelectItem>
                         <SelectItem value="Gift Hampers">Gift Hampers</SelectItem>
