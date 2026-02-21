@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // Public routes that don't need authentication
-  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/', '/products']
+  const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password', '/about', '/contact', '/', '/products', '/privacy-policy', '/terms', '/refund-policy']
   const isPublicRoute = publicRoutes.some(route => 
     pathname === route || 
     pathname.startsWith('/products/') ||  // Allow individual product pages

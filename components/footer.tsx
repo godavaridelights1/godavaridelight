@@ -142,13 +142,12 @@ export function Footer() {
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <div className="text-sm text-muted-foreground">
-                  <p>+91 9885317726</p>
-                  <p>+91 8522914714</p>
+                  <a href="tel:+919885469456" className="hover:text-primary">+91 9885469456</a>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">info@athrayapuram.com</span>
+                <a href="mailto:godavaridelights1@gmail.com" className="text-sm text-muted-foreground hover:text-primary">godavaridelights1@gmail.com</a>
               </div>
             </div>
           </div>
@@ -161,7 +160,7 @@ export function Footer() {
         <div className="container mx-auto px-4 py-10 relative z-10">
           <div className="text-center space-y-6">
             <div className="flex items-center justify-center space-x-2">
-              <span className="text-sm font-bold text-orange-700">© 2025, Godavari Delights</span>
+              <span className="text-sm font-bold text-orange-700">© 2026, Godavari Delights</span>
               <span className="text-gray-300 text-lg">|</span>
               <span className="text-sm font-bold text-orange-700">godavaridelights.in</span>
             </div>
