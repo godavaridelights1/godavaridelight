@@ -128,6 +128,20 @@ async function getActiveBanners() {
   }
 }
 
+const categoryImageMap: Record<string, string> = {
+  traditional: '/traditional-indian-sweet-putharekulu.jpg',
+  premium: '/premium-gift.png',
+  festival: '/festival-indian-sweets-diwali.jpg',
+  gifts: '/image_0901.jpeg',
+}
+
+const categoryDescriptionMap: Record<string, string> = {
+  traditional: 'Classic handmade Putharekulu with authentic recipes',
+  premium: 'Exclusive premium Putharekulu with dry fruits & saffron',
+  festival: 'Special festival collections for every celebration',
+  gifts: 'Beautifully packed gift hampers for every occasion',
+}
+
 async function getCategories() {
   try {
     // Get unique categories from products
@@ -140,14 +154,17 @@ async function getCategories() {
     })
 
     const uniqueCategories = products.map((p: any) => p.category).filter(Boolean)
-  
-    // Create category objects
-    return uniqueCategories.map((cat: string) => ({
-      id: cat || '',
-      name: cat || '',
-      description: `Explore our ${cat} collection`,
-      image: '/traditional-indian-sweet-putharekulu.jpg'
-    }))
+
+    // Create category objects with mapped images
+    return uniqueCategories.map((cat: string) => {
+      const key = cat.toLowerCase()
+      return {
+        id: cat || '',
+        name: cat || '',
+        description: categoryDescriptionMap[key] || `Explore our ${cat} collection`,
+        image: categoryImageMap[key] || '/traditional-indian-sweet-putharekulu.jpg'
+      }
+    })
   } catch (error) {
     console.error('Error fetching categories:', error)
     return []
