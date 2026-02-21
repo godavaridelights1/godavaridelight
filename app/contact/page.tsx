@@ -42,9 +42,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Visit Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    Atreyapuram Village
+                    Atreyapuram,
                     <br />
-                    East Godavari Konaseema District,
+                    East Godavari District,
                     <br />
                     Andhra Pradesh - 533235
                   </p>
@@ -60,9 +60,10 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Call Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    +91 9885469456
-                    <br />
-                    Mon-Sat: 9AM-7PM
+                    <a href="tel:+919885317726" className="hover:text-primary block">+91 9885317726</a>
+                    <a href="tel:+918522914714" className="hover:text-primary block">+91 8522914714</a>
+                    <a href="tel:+919885469456" className="hover:text-primary block">+91 9885469456</a>
+                    <span className="mt-1 block">Mon-Sat: 9AM-7PM</span>
                   </p>
                 </div>
               </CardContent>
@@ -76,7 +77,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Email Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    godavaridelights1@gmail.com
+                    <a href="mailto:godavaridelights1@gmail.com" className="hover:text-primary break-all">
+                      godavaridelights1@gmail.com
+                    </a>
                   </p>
                 </div>
               </CardContent>
