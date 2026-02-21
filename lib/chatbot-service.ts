@@ -6,7 +6,7 @@ export class ChatbotService {
   // Mock AI responses for the Putharekulu website
   private static responses: Record<string, string[]> = {
     greeting: [
-      "Hello! Welcome to Athrayapuram Putharekulu! How can I help you today?",
+      "Hello! Welcome to Atreyapuram Putharekulu! How can I help you today?",
       "Hi there! I'm here to help you with any questions about our traditional sweets.",
       "Welcome! I'm your virtual assistant. What would you like to know about our Putharekulu?",
     ],
@@ -36,8 +36,8 @@ export class ChatbotService {
       "Festival collections feature premium packaging, special varieties, and gift options. Perfect for Diwali, weddings, and other celebrations.",
     ],
     about: [
-      "Athrayapuram Putharekulu has been serving authentic traditional sweets since 1950. We're a family business with three generations of sweet-making expertise.",
-      "We're a traditional sweet shop from Athrayapuram with over 70 years of experience. Our recipes have been passed down through generations.",
+      "Atreyapuram Putharekulu has been serving authentic traditional sweets since 1950. We're a family business with three generations of sweet-making expertise.",
+      "We're a traditional sweet shop from Atreyapuram with over 70 years of experience. Our recipes have been passed down through generations.",
       "Founded in 1950, we specialize in authentic Putharekulu made using traditional methods and family recipes passed down through generations.",
     ],
     contact: [
@@ -48,7 +48,7 @@ export class ChatbotService {
     default: [
       "I'm here to help you with information about our Putharekulu products, ingredients, shipping, orders, and more. What would you like to know?",
       "I can assist you with product information, pricing, ingredients, shipping details, and order placement. How can I help?",
-      "Feel free to ask me about our products, ingredients, delivery options, festival specials, or anything else about Athrayapuram Putharekulu!",
+      "Feel free to ask me about our products, ingredients, delivery options, festival specials, or anything else about Atreyapuram Putharekulu!",
     ],
   }
 

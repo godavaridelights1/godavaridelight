@@ -20,7 +20,7 @@ export default function AboutPage() {
               <span className="text-orange-600"> Sweet Tradition</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-pretty">
-              From a small village kitchen in Athrayapuram to serving customers across India, our journey has been
+              From a small village kitchen in Atreyapuram to serving customers across India, our journey has been
               sweetened by tradition, quality, and the love of our customers.
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function AboutPage() {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold">Our Heritage</h2>
               <p className="text-muted-foreground">
-                Established in 1950 by our founder Shri Rama Krishna, Athrayapuram Putharekulu began as a small family
+                Established in 1950 by our founder Shri Rama Krishna, Atreyapuram Putharekulu began as a small family
                 business in the heart of West Godavari district. What started as a passion for creating the perfect
                 Putharekulu has now become a legacy that spans three generations.
               </p>
@@ -46,7 +46,7 @@ export default function AboutPage() {
               </p>
               <p className="text-muted-foreground">
                 Today, under the guidance of the third generation, we continue to honor our heritage while embracing
-                modern hygiene standards and packaging techniques to bring the authentic taste of Athrayapuram to your
+                modern hygiene standards and packaging techniques to bring the authentic taste of Atreyapuram to your
                 doorstep.
               </p>
             </div>

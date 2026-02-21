@@ -20,7 +20,7 @@ export class PromotionService {
     {
       id: "2",
       title: "New Customer Welcome",
-      description: "Welcome to Athrayapuram Putharekulu! Enjoy 15% off on your first order with code WELCOME15",
+      description: "Welcome to Atreyapuram Putharekulu! Enjoy 15% off on your first order with code WELCOME15",
       image: "/premium-indian-sweets-gift-box.jpg",
       type: "popup",
       targetAudience: "all",

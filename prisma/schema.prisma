@@ -408,7 +408,7 @@ model SMTPConfig {
   username        String
   password        String
   fromEmail       String
-  fromName        String   @default("Athrayapuram")
+  fromName        String   @default("Atreyapuram")
   isActive        Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

@@ -86,7 +86,7 @@ export default function ForgotPasswordPage() {
               <span className="text-primary-foreground font-bold">AP</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-xl leading-none">Athrayapuram</span>
+              <span className="font-bold text-xl leading-none">Atreyapuram</span>
               <span className="text-sm text-muted-foreground">Putharekulu</span>
             </div>
           </Link>

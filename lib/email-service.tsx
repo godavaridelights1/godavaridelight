@@ -30,7 +30,7 @@ export class EmailService {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #8B4513; margin: 0;">Athrayapuram Putharekulu</h1>
+          <h1 style="color: #8B4513; margin: 0;">Atreyapuram Putharekulu</h1>
           <p style="color: #666; margin: 5px 0;">Traditional Sweets, Modern Convenience</p>
         </div>
         
@@ -54,7 +54,7 @@ export class EmailService {
         </div>
         
         <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 12px;">
-          <p>Thank you for choosing Athrayapuram Putharekulu!</p>
+          <p>Thank you for choosing Atreyapuram Putharekulu!</p>
           <p>If you don't want to receive these emails, you can unsubscribe at any time.</p>
         </div>
       </div>
@@ -67,7 +67,7 @@ export class EmailService {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #8B4513; margin: 0;">Athrayapuram Putharekulu</h1>
+          <h1 style="color: #8B4513; margin: 0;">Atreyapuram Putharekulu</h1>
           <p style="color: #666; margin: 5px 0;">Traditional Sweets Newsletter</p>
         </div>
         
@@ -98,7 +98,7 @@ export class EmailService {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <h1 style="color: #8B4513; margin: 0;">Athrayapuram Putharekulu</h1>
+          <h1 style="color: #8B4513; margin: 0;">Atreyapuram Putharekulu</h1>
           <p style="color: #666; margin: 5px 0;">Contact Form Submission</p>
         </div>
         
@@ -147,11 +147,11 @@ export async function sendPasswordResetEmail(
   resetUrl: string,
   userName?: string
 ): Promise<boolean> {
-  const subject = 'Reset Your Password - Athrayapuram Putharekulu'
+  const subject = 'Reset Your Password - Atreyapuram Putharekulu'
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="color: #8B4513; margin: 0;">Athrayapuram Putharekulu</h1>
+        <h1 style="color: #8B4513; margin: 0;">Atreyapuram Putharekulu</h1>
         <p style="color: #666; margin: 5px 0;">Password Reset Request</p>
       </div>
       
@@ -181,7 +181,7 @@ export async function sendPasswordResetEmail(
       </div>
       
       <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #666; font-size: 12px;">
-        <p>Thank you for choosing Athrayapuram Putharekulu!</p>
+        <p>Thank you for choosing Atreyapuram Putharekulu!</p>
       </div>
     </div>
   `

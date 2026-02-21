@@ -24,7 +24,7 @@ export function Chatbot() {
     if (isOpen && messages.length === 0) {
       // Add welcome message when chat opens for the first time
       const welcomeMessage = ChatbotService.addMessage(
-        "Hello! I'm your virtual assistant for Athrayapuram Putharekulu. I can help you with product information, ingredients, shipping, orders, and more. How can I assist you today?",
+        "Hello! I'm your virtual assistant for Atreyapuram Putharekulu. I can help you with product information, ingredients, shipping, orders, and more. How can I assist you today?",
         "bot",
         sessionId,
       )

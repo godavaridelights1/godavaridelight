@@ -58,7 +58,7 @@ export default function SMTPConfigPage() {
     secure: true,
     username: '',
     fromEmail: '',
-    fromName: 'Athrayapuram',
+    fromName: 'Atreyapuram',
     isActive: false
   })
 
@@ -302,7 +302,7 @@ export default function SMTPConfigPage() {
                 type="email"
                 value={config.fromEmail}
                 onChange={(e) => setConfig({ ...config, fromEmail: e.target.value })}
-                placeholder="noreply@athrayapuram.com"
+                placeholder="noreply@Atreyapuram.com"
               />
             </div>
 
@@ -311,7 +311,7 @@ export default function SMTPConfigPage() {
               <Input
                 value={config.fromName}
                 onChange={(e) => setConfig({ ...config, fromName: e.target.value })}
-                placeholder="Athrayapuram"
+                placeholder="Atreyapuram"
               />
             </div>
           </div>

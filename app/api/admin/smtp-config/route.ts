@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
             username,
             password,
             fromEmail,
-            fromName: fromName || 'Athrayapuram',
+            fromName: fromName || 'Atreyapuram',
             isActive: isActive === 'true' || isActive === true
           },
           select: {
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
             username,
             password,
             fromEmail,
-            fromName: fromName || 'Athrayapuram',
+            fromName: fromName || 'Atreyapuram',
             isActive: isActive === 'true' || isActive === true
           },
           select: {
@@ -153,7 +153,7 @@ export async function PATCH(req: NextRequest) {
     const info = await transporter.sendMail({
       from: `${config.fromName} <${config.fromEmail}>`,
       to: testEmail,
-      subject: 'SMTP Configuration Test - Athrayapuram',
+      subject: 'SMTP Configuration Test - Atreyapuram',
       html: '<h2>SMTP Configuration Test</h2><p>This is a test email. If you received this, your SMTP configuration is working correctly!</p>'
     });
 

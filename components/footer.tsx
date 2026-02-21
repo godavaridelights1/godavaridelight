@@ -24,7 +24,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground">
-              Authentic handmade Putharekulu from Athrayapuram, crafted with traditional recipes and pure ingredients.
+              Authentic handmade Putharekulu from Atreyapuram, crafted with traditional recipes and pure ingredients.
             </p>
             <div className="space-y-4">
               <div>
@@ -134,7 +134,7 @@ export function Footer() {
               <div className="flex items-start space-x-2">
                 <MapPin className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div className="text-sm text-muted-foreground">
-                  <p>Athrayapuram Village,</p>
+                  <p>Atreyapuram Village,</p>
                   <p>West Godavari District,</p>
                   <p>Andhra Pradesh - 534134</p>
                 </div>

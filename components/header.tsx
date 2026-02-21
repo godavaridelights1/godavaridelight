@@ -68,7 +68,7 @@ export function Header() {
               )}
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg leading-none">Athrayapuram</span>
+              <span className="font-bold text-lg leading-none">Atreyapuram</span>
               <span className="text-xs text-muted-foreground">Putharekulu</span>
             </div>
           </Link>

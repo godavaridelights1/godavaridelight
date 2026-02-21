@@ -391,7 +391,7 @@ export default function ProductDetailPage() {
                       <h2 className="text-2xl font-bold mb-4 text-foreground">About This Product</h2>
                       <p className="text-muted-foreground leading-relaxed">
                         {product.description} Our {product.name.toLowerCase()} is crafted using traditional methods passed
-                        down through generations. Each piece is carefully handmade by our skilled artisans in Athrayapuram
+                        down through generations. Each piece is carefully handmade by our skilled artisans in Atreyapuram
                         village, ensuring authentic taste and texture.
                       </p>
                     </div>

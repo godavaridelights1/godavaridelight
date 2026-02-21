@@ -7,7 +7,7 @@ import { useSiteSettings } from "@/hooks/use-site-settings"
 export function HeroSection() {
   const { settings } = useSiteSettings()
 
-  const heroImage = settings?.heroSectionImageUrl || "/traditional-indian-sweet-putharekulu.jpg"
+  const heroImage = settings?.heroSectionImageUrl || "/hero-product.jpeg"
 
   return (
     <FadeInSection direction="right" delay={200}>

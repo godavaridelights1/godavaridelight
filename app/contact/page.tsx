@@ -20,7 +20,7 @@ export default function ContactPage() {
             <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Get in Touch</Badge>
             <h1 className="text-4xl lg:text-5xl font-bold text-balance">
               Contact
-              <span className="text-orange-600"> Athrayapuram</span>
+              <span className="text-orange-600"> Atreyapuram</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-pretty">
               Have questions about our products? Want to place a bulk order? We'd love to hear from you and help you
@@ -42,7 +42,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Visit Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    Athrayapuram Village
+                    Atreyapuram Village
                     <br />
                     West Godavari District
                     <br />
@@ -117,10 +117,10 @@ export default function ContactPage() {
                   </div>
                   <div className="mt-4 space-y-2">
                     <p className="text-sm text-muted-foreground">
-                      <strong>Address:</strong> Athrayapuram Village, West Godavari District, Andhra Pradesh - 534134
+                      <strong>Address:</strong> Atreyapuram Village, West Godavari District, Andhra Pradesh - 534134
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      <strong>Landmark:</strong> Near Athrayapuram Bus Stand, opposite to Sri Rama Temple
+                      <strong>Landmark:</strong> Near Atreyapuram Bus Stand, opposite to Sri Rama Temple
                     </p>
                   </div>
                 </CardContent>
