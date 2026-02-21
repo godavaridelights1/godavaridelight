@@ -7,19 +7,19 @@ import { Award, Users, Heart, Leaf } from "lucide-react"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-orange-50 to-yellow-50 py-16">
+      <section className="bg-gradient-to-r from-orange-50 to-yellow-50 py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center space-y-6">
+          <div className="text-center space-y-4 md:space-y-6">
             <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Our Story</Badge>
-            <h1 className="text-4xl lg:text-5xl font-bold text-balance">
+            <h1 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight">
               Three Generations of
               <span className="text-orange-600"> Sweet Tradition</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto text-pretty">
+            <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
               From a small village kitchen in Atreyapuram to serving customers across India, our journey has been
               sweetened by tradition, quality, and the love of our customers.
             </p>
@@ -28,11 +28,11 @@ export default function AboutPage() {
       </section>
 
       {/* Story Section */}
-      <section className="py-16">
+      <section className="py-10 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h2 className="text-3xl font-bold">Our Heritage</h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="space-y-4 md:space-y-6">
+              <h2 className="text-2xl md:text-3xl font-bold">Our Heritage</h2>
               <p className="text-muted-foreground">
                 Established in 1950 by our founder Shri Rama Krishna, Atreyapuram Putharekulu began as a small family
                 business in the heart of West Godavari district. What started as a passion for creating the perfect
@@ -50,13 +50,13 @@ export default function AboutPage() {
                 doorstep.
               </p>
             </div>
-            <div className="relative">
+            <div className="relative w-full">
               <Image
                 src="/traditional-putharekulu-sweet.jpg"
                 alt="Traditional Putharekulu Making"
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg"
+                className="rounded-lg shadow-lg w-full h-auto object-cover"
               />
             </div>
           </div>
@@ -64,59 +64,59 @@ export default function AboutPage() {
       </section>
 
       {/* Values Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-10 md:py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl font-bold">Our Values</h2>
+          <div className="text-center space-y-4 mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold">Our Values</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               The principles that guide us in creating the finest Putharekulu
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-3">
                 <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <Award className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="font-semibold">Quality First</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-sm md:text-base">Quality First</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">
                   We never compromise on quality. Every product is made with the finest ingredients and traditional
                   methods.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-3">
                 <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <Heart className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="font-semibold">Made with Love</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-sm md:text-base">Made with Love</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">
                   Each Putharekulu is handcrafted with care and love, just like our grandmothers used to make.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-3">
                 <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <Leaf className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="font-semibold">Natural Ingredients</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-sm md:text-base">Natural Ingredients</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">
                   We use only natural, organic ingredients sourced directly from local farmers and trusted suppliers.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-3">
                 <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                   <Users className="h-6 w-6 text-orange-600" />
                 </div>
-                <h3 className="font-semibold">Customer Satisfaction</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-sm md:text-base">Customer Satisfaction</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">
                   Your happiness is our success. We strive to exceed expectations with every order.
                 </p>
               </CardContent>
@@ -126,10 +126,10 @@ export default function AboutPage() {
       </section>
 
       {/* Process Section */}
-      <section className="py-16">
+      <section className="py-10 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl font-bold">Our Process</h2>
+          <div className="text-center space-y-4 mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold">Our Process</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               From kitchen to your table - the journey of authentic Putharekulu
             </p>
@@ -170,22 +170,22 @@ export default function AboutPage() {
       </section>
 
       {/* Team Section */}
-      <section className="py-16 bg-muted/30">
+      <section className="py-10 md:py-16 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-12">
-            <h2 className="text-3xl font-bold">Meet Our Family</h2>
+          <div className="text-center space-y-4 mb-8 md:mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold">Meet Our Family</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               The passionate people behind every delicious Putharekulu
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-orange-600">RK</span>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8">
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">RK</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Rama Krishna</h3>
+                  <h3 className="font-semibold text-base md:text-lg">Rama Krishna</h3>
                   <p className="text-sm text-muted-foreground">Founder (1950)</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -195,13 +195,13 @@ export default function AboutPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-orange-600">VK</span>
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">VK</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Venkata Krishna</h3>
+                  <h3 className="font-semibold text-base md:text-lg">Venkata Krishna</h3>
                   <p className="text-sm text-muted-foreground">Second Generation</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -210,13 +210,13 @@ export default function AboutPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center p-6">
-              <CardContent className="space-y-4">
-                <div className="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
-                  <span className="text-2xl font-bold text-orange-600">SK</span>
+            <Card className="text-center">
+              <CardContent className="p-4 md:p-6 space-y-4">
+                <div className="mx-auto w-20 h-20 md:w-24 md:h-24 bg-orange-100 rounded-full flex items-center justify-center">
+                  <span className="text-xl md:text-2xl font-bold text-orange-600">SK</span>
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Sai Krishna</h3>
+                  <h3 className="font-semibold text-base md:text-lg">Sai Krishna</h3>
                   <p className="text-sm text-muted-foreground">Current Owner</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
