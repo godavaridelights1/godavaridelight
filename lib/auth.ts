@@ -5,6 +5,8 @@ import GoogleProvider from 'next-auth/providers/google'
 import bcrypt from 'bcryptjs'
 import prisma from './prisma'
 
+const compromisedSeedPasswords = new Set(['admin123', 'customer123'])
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
@@ -20,34 +22,14 @@ export const authOptions: NextAuthOptions = {
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-        phone: { label: 'Phone', type: 'text' }
+        password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        // Phone-based authentication (after OTP verification)
-        if (credentials?.phone && !credentials?.email && !credentials?.password) {
-          const user = await prisma.user.findFirst({
-            where: {
-              phone: credentials.phone
-            }
-          })
-
-          if (!user) {
-            throw new Error('User not found')
-          }
-
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            phone: user.phone || undefined,
-            image: user.image,
-          }
-        }
-
-        // Email and password authentication
-        if (!credentials?.email || !credentials?.password) {
+        if (
+          !credentials?.email ||
+          !credentials?.password ||
+          compromisedSeedPasswords.has(credentials.password)
+        ) {
           throw new Error('Invalid credentials')
         }
 

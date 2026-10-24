@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Star, X } from "lucide-react"
-import Image from "next/image"
+import { ResponsiveImage } from "@/components/responsive-image"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 interface LightboxProps {
@@ -29,10 +29,11 @@ export function ProductImageLightbox({ images, initialIndex, isOpen, onClose }: 
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl w-full p-0 border-0 bg-black/90 backdrop-blur">
         <div className="relative w-full aspect-square flex items-center justify-center">
-          <Image
+          <ResponsiveImage
             src={images[currentIndex] || "/placeholder.svg"}
             alt={`Product image ${currentIndex + 1}`}
             fill
+            sizes="(max-width: 768px) 100vw, 896px"
             className="object-contain"
           />
 
@@ -83,7 +84,7 @@ export function ProductImageLightbox({ images, initialIndex, isOpen, onClose }: 
                     index === currentIndex ? "ring-2 ring-white scale-110" : "opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <Image src={image || "/placeholder.svg"} alt={`Thumbnail ${index + 1}`} fill className="object-cover" />
+                  <ResponsiveImage src={image || "/placeholder.svg"} alt={`Thumbnail ${index + 1}`} fill sizes="48px" className="object-cover" />
                 </button>
               ))}
             </div>
@@ -117,10 +118,11 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
       >
-        <Image
+        <ResponsiveImage
           src={displayImages[selectedIndex] || "/placeholder.svg"}
           alt={productName}
           fill
+          sizes="(max-width: 768px) 100vw, 50vw"
           className={`object-cover transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`}
         />
 
@@ -150,7 +152,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
-              <Image src={image || "/placeholder.svg"} alt={`${productName} ${index + 1}`} fill className="object-cover" />
+              <ResponsiveImage src={image || "/placeholder.svg"} alt={`${productName} ${index + 1}`} fill sizes="80px" className="object-cover" />
             </button>
           ))}
         </div>

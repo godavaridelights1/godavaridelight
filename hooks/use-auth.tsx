@@ -48,16 +48,20 @@ export function useAuth() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        console.error("Registration error:", error)
-        return false
+        const result: { error?: string } = await response.json()
+        throw new Error(result.error || `Registration failed (${response.status}).`)
       }
 
       // After successful registration, sign in
-      return await login(email, password)
+      const signedIn = await login(email, password)
+      if (!signedIn) {
+        throw new Error("Your account was created, but automatic sign-in failed. Please sign in with your new credentials.")
+      }
+
+      return true
     } catch (error) {
       console.error("Registration error:", error)
-      return false
+      throw error
     }
   }
 

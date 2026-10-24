@@ -18,12 +18,6 @@ const faqItems: FAQItem[] = [
       "Pootharekulu, also known as Putharekulu or Paper Sweet, is an authentic Indian sweet delicacy from Atreyapuram village in Andhra Pradesh. It's made by rolling rice starch batter into thin sheets and layering them with a delicious filling of powdered sugar, ghee (clarified butter), and sometimes dry fruits. These delicate rolls are sun-dried to create a crispy, flaky treat with a sweet, buttery taste that melts in your mouth. It's a true symbol of Andhra Pradesh's culinary heritage and has become famous across India.",
   },
   {
-    id: "faq-2",
-    question: "How is Godavari Delights Pootharekulu made?",
-    answer:
-      "At Godavari Delights, our Pootharekulu is crafted through a meticulous traditional process. First, we grind rice into a fine powder and prepare a smooth batter. This batter is spread thinly on heated surfaces to create delicate sheets. Each sheet is carefully filled with our special blend of premium ingredients - powdered sugar or jaggery, pure ghee, and handpicked dry fruits. The layers are then rolled together and left to sun-dry naturally, resulting in the perfect balance of crispness and flavor that makes our Pootharekulu truly exceptional.",
-  },
-  {
     id: "faq-3",
     question: "What varieties of Pootharekulu does Godavari Delights offer?",
     answer:
@@ -42,12 +36,6 @@ const faqItems: FAQItem[] = [
       "For optimal freshness and taste, store your Godavari Delights Pootharekulu in an airtight container in a cool, dry place away from direct sunlight and humidity. When stored properly, our Pootharekulu maintains its crispness and delicious flavor for several weeks. We recommend consuming it within 30 days of delivery for the best experience. Keep it away from moisture and strong odors, and avoid storing near heating sources.",
   },
   {
-    id: "faq-6",
-    question: "Where can I buy Godavari Delights Pootharekulu?",
-    answer:
-      "You can conveniently purchase Godavari Delights Pootharekulu directly from our website at godavaridelights.in. We offer a wide selection of varieties and pack sizes delivered right to your doorstep anywhere in India. Our user-friendly platform makes ordering easy, with secure payment options and reliable, fast delivery. Simply browse our product collection, select your favorite varieties, and enjoy authentic, freshly prepared Pootharekulu from the comfort of your home.",
-  },
-  {
     id: "faq-7",
     question: "Do you deliver across India?",
     answer:
@@ -64,12 +52,6 @@ const faqItems: FAQItem[] = [
     question: "Is Godavari Delights Pootharekulu suitable for diabetics?",
     answer:
       "We offer a special Sugar-Free Pootharekulu variety made with natural sugar substitutes, making it a suitable option for diabetics and health-conscious consumers. This variety maintains the same authentic taste and texture of our traditional Pootharekulu while being lower in glycemic impact. However, we recommend consulting with your healthcare provider before consumption. Each product is carefully prepared to ensure it meets dietary requirements while delivering the delicious Pootharekulu experience you love.",
-  },
-  {
-    id: "faq-10",
-    question: "What is the price range of Godavari Delights Pootharekulu?",
-    answer:
-      "Godavari Delights Pootharekulu is offered at affordable prices starting from ₹349 for a standard box (approximately 300 grams with 10 pieces). We believe in providing exceptional quality at reasonable prices, ensuring that authentic, artisan-made Pootharekulu is accessible to everyone. Our pricing varies based on the variety and pack size - from traditional to premium dry fruit combinations. Visit our website to explore all available options and find the perfect choice that fits your budget and preferences.",
   },
 ]
 

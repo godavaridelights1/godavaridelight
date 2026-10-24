@@ -17,7 +17,7 @@ import { MultiImageUpload } from "@/components/multi-image-upload"
 import { RichTextEditor } from "@/components/rich-text-editor"
 import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye, Package, TrendingUp, Loader2, X } from "lucide-react"
 import { toast } from "sonner"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import type { Product } from "@/lib/types"
 
 export default function AdminProductsPage() {

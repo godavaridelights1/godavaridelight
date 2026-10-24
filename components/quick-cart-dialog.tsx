@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import { X, Minus, Plus, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -41,16 +41,19 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
     } catch (error) {
       toast.error("Failed to update quantity")
     } finally {
-      setIsUpdating(cartItemId)
+      setIsUpdating(null)
     }
   }
 
   const handleRemove = async (cartItemId: string) => {
+    setIsUpdating(cartItemId)
     try {
       await removeFromCart(cartItemId)
       toast.success("Item removed from cart")
     } catch (error) {
       toast.error("Failed to remove item")
+    } finally {
+      setIsUpdating(null)
     }
   }
 
@@ -59,8 +62,8 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md h-[80vh] flex flex-col p-0">
-        <DialogHeader className="px-6 py-4 border-b flex flex-row items-center justify-between space-y-0">
+      <DialogContent className="flex h-[min(80dvh,44rem)] max-h-[calc(100dvh-2rem)] w-[calc(100vw-1rem)] max-w-md flex-col overflow-hidden p-0">
+        <DialogHeader className="flex shrink-0 flex-row items-center justify-between space-y-0 border-b px-4 py-4 sm:px-6">
           <DialogTitle>Your Cart</DialogTitle>
           <button
             onClick={() => onOpenChange(false)}
@@ -89,12 +92,12 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
           </div>
         ) : (
           <>
-            <div className="flex-1 overflow-y-auto">
-              <div className="px-6 py-4 space-y-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+              <div className="space-y-4 px-4 py-4 sm:px-6">
                 {cart.map((item: CartItem) => (
-                  <div key={item.id} className="flex gap-4 pb-4 border-b last:border-b-0">
+                  <div key={item.id} className="flex items-center gap-3 border-b pb-4 last:border-b-0 sm:gap-4">
                     {/* Product Image */}
-                    <div className="relative h-20 w-20 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
+                    <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-muted sm:h-20 sm:w-20">
                       <Image
                         src={item.product.image || "/placeholder.jpg"}
                         alt={item.product.name}
@@ -104,11 +107,11 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
                     </div>
 
                     {/* Product Details */}
-                    <div className="flex-1 flex flex-col justify-between">
+                    <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                       <div>
                         <Link
                           href={`/products/${item.productId}`}
-                          className="text-sm font-medium hover:text-primary transition-colors line-clamp-2"
+                          className="line-clamp-2 text-sm font-medium transition-colors hover:text-primary"
                         >
                           {item.product.name}
                         </Link>
@@ -118,27 +121,29 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
                       </div>
 
                       {/* Quantity Controls */}
-                      <div className="flex items-center gap-2">
+                      <div className="inline-flex w-fit items-center gap-1 rounded-lg border bg-background p-0.5">
                         <button
                           onClick={() =>
                             handleQuantityChange(item.id, item.quantity - 1)
                           }
                           disabled={isUpdating === item.id || item.quantity <= 1}
-                          className="p-1 hover:bg-muted rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          aria-label={`Decrease ${item.product.name} quantity`}
+                          className="flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          <Minus className="h-3 w-3" />
+                          <Minus className="h-4 w-4" />
                         </button>
-                        <span className="w-6 text-center text-sm font-medium">
+                        <span className="min-w-8 text-center text-sm font-medium tabular-nums">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() =>
                             handleQuantityChange(item.id, item.quantity + 1)
                           }
-                          disabled={isUpdating === item.id}
-                          className="p-1 hover:bg-muted rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          disabled={isUpdating === item.id || item.quantity >= 10}
+                          aria-label={`Increase ${item.product.name} quantity`}
+                          className="flex h-10 w-10 items-center justify-center rounded-md transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          <Plus className="h-3 w-3" />
+                          <Plus className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
@@ -146,9 +151,11 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
                     {/* Remove Button */}
                     <button
                       onClick={() => handleRemove(item.id)}
-                      className="text-destructive hover:text-destructive/80 transition-colors flex-shrink-0 p-1"
+                      disabled={isUpdating === item.id}
+                      aria-label={`Remove ${item.product.name} from cart`}
+                      className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg text-destructive transition-colors hover:bg-destructive/10 hover:text-destructive/80 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-5 w-5" />
                     </button>
                   </div>
                 ))}
@@ -156,7 +163,7 @@ export function QuickCartDialog({ open, onOpenChange }: QuickCartDialogProps) {
             </div>
 
             {/* Footer */}
-            <div className="border-t px-6 py-4 space-y-3">
+            <div className="shrink-0 space-y-3 border-t px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="font-medium">₹{cartTotal.toFixed(2)}</span>

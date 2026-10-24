@@ -1,9 +1,17 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { randomBytes } from 'node:crypto'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  const adminEmail = process.env.SEED_ADMIN_EMAIL?.trim()
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+
+  if (!adminEmail || !adminPassword || adminPassword.length < 16) {
+    throw new Error('Set SEED_ADMIN_EMAIL and a SEED_ADMIN_PASSWORD of at least 16 characters before running the seed.')
+  }
+
   console.log('🌱 Starting database seeding...')
 
   // Clear existing data
@@ -28,14 +36,14 @@ async function main() {
 
   // Create Admin User
   console.log('👤 Creating users...')
-  const adminPassword = await bcrypt.hash('admin123', 10)
-  const customerPassword = await bcrypt.hash('customer123', 10)
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
+  const customerPassword = await bcrypt.hash(randomBytes(32).toString('hex'), 10)
 
   const admin = await prisma.user.create({
     data: {
       name: 'Admin User',
-      email: 'admin@godavaridelights.com',
-      password: adminPassword,
+      email: adminEmail,
+      password: hashedAdminPassword,
       role: 'admin',
       phone: '+91 9876543210',
       emailVerified: new Date()
@@ -470,13 +478,13 @@ async function main() {
       orderNumber: `ORD-${Date.now() + 2}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
       status: 'pending',
       paymentStatus: 'pending',
-      paymentMethod: 'cod',
+      paymentMethod: 'online',
       subtotal: 899,
       discount: 0,
       deliveryCharge: 50,
       total: 949,
       addressId: address1.id,
-      notes: 'COD order',
+      notes: 'Seed order',
       items: {
         create: [
           {
@@ -575,10 +583,6 @@ async function main() {
   console.log('   ⭐ Reviews: 4')
   console.log('   🛒 Carts: 1')
   console.log('   💳 Payment Config: 1')
-  console.log('\n🔐 Login Credentials:')
-  console.log('   Admin: admin@godavaridelights.com / admin123')
-  console.log('   Customer 1: rajesh@example.com / customer123')
-  console.log('   Customer 2: priya@example.com / customer123')
 }
 
 main()

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { ProtectedRoute } from "@/components/protected-route"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -837,8 +836,6 @@ export default function ProfilePage() {
             </Tabs>
           </div>
         </div>
-
-        <Footer />
 
         <Dialog 
           open={isAddressDialogOpen} 

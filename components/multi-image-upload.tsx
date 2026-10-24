@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback, useEffect } from "react"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Upload, X, GripVertical, CheckCircle } from "lucide-react"

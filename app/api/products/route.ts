@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { requireAdmin, apiResponse, apiError } from '@/lib/api-middleware'
 import { prisma } from '@/lib/prisma'
+import { getProductImageUrl } from '@/lib/product-image'
 
 // Disable caching for this API route
 export const dynamic = 'force-dynamic'
@@ -44,11 +45,13 @@ export async function GET(request: NextRequest) {
       where,
       include: {
         images: includeImages,
-        reviews: {
-          select: {
-            rating: true
+        ...(includeImages && {
+          reviews: {
+            select: {
+              rating: true
+            }
           }
-        }
+        }),
       },
       orderBy: { createdAt: 'desc' },
       take: limit ? parseInt(limit) : undefined
@@ -56,10 +59,10 @@ export async function GET(request: NextRequest) {
 
     // Calculate average rating for each product
     const productsWithRatings = products.map((product: any) => {
-      const ratings = product.reviews.map((r: any) => r.rating)
-      const averageRating = ratings.length > 0 
+      const ratings = product.reviews?.map((r: any) => r.rating)
+      const averageRating = ratings && ratings.length > 0
         ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length 
-        : 0
+        : product.averageRating || 0
 
       return {
         id: product.id,
@@ -67,7 +70,7 @@ export async function GET(request: NextRequest) {
         description: product.description,
         price: product.price,
         originalPrice: product.originalPrice,
-        image: product.image,
+        image: product.image ? getProductImageUrl(product.id, product.image) : '',
         category: product.category,
         inStock: product.inStock,
         featured: product.featured,
@@ -75,8 +78,13 @@ export async function GET(request: NextRequest) {
         ingredients: product.ingredients,
         nutritionalInfo: product.nutritionalInfo,
         averageRating: Math.round(averageRating * 10) / 10,
-        reviewCount: product.reviews.length,
-        images: product.images,
+        reviewCount: ratings?.length ?? product.reviewCount,
+        images: Array.isArray(product.images)
+          ? product.images.map((image: { id: string; url: string }) => ({
+              ...image,
+              url: getProductImageUrl(product.id, image.url, image.id),
+            }))
+          : product.images,
         createdAt: product.createdAt,
         updatedAt: product.updatedAt
       }

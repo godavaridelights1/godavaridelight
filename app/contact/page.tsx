@@ -60,8 +60,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Call Us</h3>
                   <p className="text-sm text-muted-foreground">
-                    <a href="tel:+919885317726" className="hover:text-primary block">+91 9885317726</a>
+                    <span className="block">Nadipalli Sai Krishna Madhav</span>
                     <a href="tel:+918522914714" className="hover:text-primary block">+91 8522914714</a>
+                    <span className="mt-2 block">Chandu Nadipalli</span>
                     <a href="tel:+919885469456" className="hover:text-primary block">+91 9885469456</a>
                     <span className="mt-1 block">Mon-Sat: 9AM-7PM</span>
                   </p>
@@ -104,8 +105,8 @@ export default function ContactPage() {
             </Card>
           </div>
 
-          {/* Contact Form and Map */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Map and Additional Info */}
+          <div className="grid grid-cols-1 gap-6">
             {/* Map and Additional Info */}
             <div className="space-y-6">
               <Card>

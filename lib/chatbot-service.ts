@@ -2,6 +2,8 @@ import type { ChatMessage } from "./types"
 
 export class ChatbotService {
   private static messages: ChatMessage[] = []
+  private static readonly contactResponse =
+    "Contact Nadipalli Sai Krishna Madhav at +91 8522914714 or Chandu Nadipalli at +91 9885469456. Email: godavaridelights1@gmail.com."
 
   // Mock AI responses for the Putharekulu website
   private static responses: Record<string, string[]> = {
@@ -21,7 +23,7 @@ export class ChatbotService {
       "We use traditional ingredients: fine rice flour, unrefined jaggery, pure ghee, cardamom, and other natural spices. No artificial colors or preservatives are added.",
     ],
     shipping: [
-      "We offer free shipping on orders above ₹500. Standard delivery takes 2-3 business days, and express delivery is available for same-day or next-day delivery.",
+      "We offer free shipping on orders of ₹1,500 or more. Orders below ₹1,500 have a ₹100 delivery fee. Standard delivery takes 2-3 business days, and express delivery is available for same-day or next-day delivery.",
       "Shipping is free for orders over ₹500. We deliver across India with standard (2-3 days) and express (1-2 days) options available.",
       "We provide nationwide shipping. Orders above ₹500 get free delivery. Express shipping available for urgent orders.",
     ],
@@ -40,11 +42,6 @@ export class ChatbotService {
       "We're a traditional sweet shop from Atreyapuram with over 70 years of experience. Our recipes have been passed down through generations.",
       "Founded in 1950, we specialize in authentic Putharekulu made using traditional methods and family recipes passed down through generations.",
     ],
-    contact: [
-      "You can reach us at contact@atpu.in or call us at +91-9876543210. We're available Monday to Saturday, 9 AM to 7 PM.",
-      "Contact us via email at contact@atpu.in or phone +91-9876543210. Our customer service team is ready to help you.",
-      "For any queries, email us at contact@atpu.in or call +91-9876543210. We respond to all inquiries within 24 hours.",
-    ],
     default: [
       "I'm here to help you with information about our Putharekulu products, ingredients, shipping, orders, and more. What would you like to know?",
       "I can assist you with product information, pricing, ingredients, shipping details, and order placement. How can I help?",
@@ -54,6 +51,10 @@ export class ChatbotService {
 
   static generateResponse(userMessage: string): string {
     const message = userMessage.toLowerCase()
+
+    if (/\b(contact|contacts|phone|email|reach|call|number)\b/.test(message)) {
+      return this.contactResponse
+    }
 
     // Simple keyword matching for demo purposes
     if (message.includes("hello") || message.includes("hi") || message.includes("hey")) {
@@ -70,8 +71,6 @@ export class ChatbotService {
       return this.getRandomResponse("festivals")
     } else if (message.includes("about") || message.includes("history") || message.includes("story")) {
       return this.getRandomResponse("about")
-    } else if (message.includes("contact") || message.includes("phone") || message.includes("email")) {
-      return this.getRandomResponse("contact")
     } else {
       return this.getRandomResponse("default")
     }

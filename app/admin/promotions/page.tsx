@@ -17,7 +17,7 @@ import { NewsletterService } from "@/lib/newsletter-service"
 import { CouponService } from "@/lib/coupon-service"
 import type { Promotion } from "@/lib/types"
 import { toast } from "sonner"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 
 const mockCustomers = [
   {

@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
       return apiError('Shipping address is required', 400)
     }
 
-    if (!paymentMethod || !['cod', 'online'].includes(paymentMethod)) {
-      return apiError('Valid payment method is required', 400)
+    if (paymentMethod !== 'online') {
+      return apiError('Only online payment is available', 400)
     }
 
     // Calculate totals
@@ -148,7 +148,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const deliveryCharge = subtotal >= 500 ? 0 : 50
+    const deliveryCharge = subtotal >= 1500 ? 0 : 100
     const total = subtotal - discount + deliveryCharge
 
     // Generate order number
@@ -165,7 +165,7 @@ export async function POST(request: NextRequest) {
         total,
         status: 'pending',
         paymentMethod,
-        paymentStatus: paymentMethod === 'cod' ? 'pending' : 'pending',
+        paymentStatus: 'pending',
         addressId,
         couponCode: appliedCoupon?.code || null,
         notes,

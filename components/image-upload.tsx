@@ -116,7 +116,7 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
             <img
               src={value}
               alt="Upload preview"
-              className="object-cover w-full h-full"
+              className="object-contain w-full h-full bg-white"
             />
             {!disabled && (
               <Button

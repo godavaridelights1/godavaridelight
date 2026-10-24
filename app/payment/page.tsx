@@ -92,7 +92,7 @@ export default function PaymentPage() {
         
         // Check if it's a configuration error
         if (error.error && error.error.includes('not configured')) {
-          setPaymentError('Payment gateway is not configured. Please contact support or use Cash on Delivery.')
+          setPaymentError('Payment gateway is not configured. Please contact support to complete your payment.')
           toast.error('Payment system not configured')
           return
         }
@@ -303,19 +303,6 @@ export default function PaymentPage() {
                       <div className="flex-1">
                         <h4 className="font-semibold text-destructive">Payment Error</h4>
                         <p className="text-sm text-muted-foreground mt-1">{paymentError}</p>
-                        {paymentError.includes('not configured') && (
-                          <div className="mt-3 space-y-2">
-                            <p className="text-sm font-medium">Alternative Payment Options:</p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => router.push('/checkout')}
-                              className="w-full"
-                            >
-                              Return to Checkout - Use Cash on Delivery
-                            </Button>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>

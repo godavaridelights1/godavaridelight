@@ -1,15 +1,15 @@
 import Link from "next/link"
-import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
+import { TestimonialsCarousel } from "@/components/testimonials-carousel"
 import { PromotionBanner } from "@/components/promotion-banner"
 import { PromotionPopup } from "@/components/promotion-popup"
 import { NewsletterSignup } from "@/components/newsletter-signup"
-import { Chatbot } from "@/components/chatbot"
+import { LazyChatbot } from "@/components/lazy-chatbot"
 import { FadeInSection } from "@/components/fade-in-section"
 import { AnimatedCounter } from "@/components/animated-counter"
 import { FloatingElements } from "@/components/floating-elements"
@@ -18,203 +18,75 @@ import { WhyChooseUs } from "@/components/why-choose-us"
 import { WhyGodavariDelights } from "@/components/why-godavari-delights"
 import { HeroSection } from "@/components/hero-section"
 import { FAQ } from "@/components/faq"
-import { Star, Truck, Shield, Award, Users } from "lucide-react"
+import { Star } from "lucide-react"
 import { prisma } from "@/lib/prisma"
+import { getProductImageUrl } from "@/lib/product-image"
 
-async function getFeaturedProducts() {
+async function getHomepageProducts() {
   try {
     const products = await prisma.product.findMany({
-      where: {
+      where: { inStock: true },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        originalPrice: true,
+        image: true,
+        category: true,
+        inStock: true,
         featured: true,
-        inStock: true
+        weight: true,
+        createdAt: true,
+        updatedAt: true,
       },
-      include: {
-        images: true,
-        reviews: {
-          select: {
-            rating: true
-          }
-        }
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 4
+      orderBy: { createdAt: "desc" },
+      take: 4,
     })
 
-    return products.map((product: any) => {
-      const ratings = product.reviews.map((r: any) => r.rating)
-      const averageRating = ratings.length > 0
-        ? Math.round((ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length) * 10) / 10
-        : 0
-
-      return {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.image,
-        category: product.category,
-        inStock: product.inStock,
-        featured: product.featured,
-        images: product.images,
-        averageRating,
-        reviewCount: product.reviews.length,
-        createdAt: product.createdAt
-      }
-    })
+    return products.map((product) => ({
+      ...product,
+      description: product.description || "",
+      originalPrice: product.originalPrice ?? undefined,
+      image: product.image ? getProductImageUrl(product.id, product.image) : "",
+      weight: product.weight ?? undefined,
+      images: [],
+      averageRating: 0,
+      reviewCount: 0,
+    }))
   } catch (error) {
-    console.error('Error fetching featured products:', error)
+    console.error("Error fetching homepage products:", error)
     return []
   }
 }
 
-async function getAllProducts() {
+async function getHomepageHeroImage() {
   try {
-    const products = await prisma.product.findMany({
-      where: {
-        inStock: true
-      },
-      include: {
-        images: true,
-        reviews: {
-          select: {
-            rating: true
-          }
-        }
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 8
+    const settings = await prisma.siteSettings.findFirst({
+      select: { heroSectionImageUrl: true },
     })
-
-    return products.map((product: any) => {
-      const ratings = product.reviews.map((r: any) => r.rating)
-      const averageRating = ratings.length > 0
-        ? Math.round((ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length) * 10) / 10
-        : 0
-
-      return {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.image,
-        category: product.category,
-        inStock: product.inStock,
-        featured: product.featured,
-        images: product.images,
-        averageRating,
-        reviewCount: product.reviews.length,
-        createdAt: product.createdAt
-      }
-    })
+    return settings?.heroSectionImageUrl || "/traditional-indian-sweet-putharekulu.jpg"
   } catch (error) {
-    console.error('Error fetching all products:', error)
-    return []
-  }
-}
-
-async function getActiveBanners() {
-  try {
-    const banners = await prisma.banner.findMany({
-      where: { isActive: true },
-      orderBy: { displayOrder: 'asc' },
-      take: 3
-    })
-    return banners
-  } catch (error) {
-    console.error('Error fetching banners:', error)
-    return []
-  }
-}
-
-const categoryImageMap: Record<string, string> = {
-  traditional: '/traditional-indian-sweet-putharekulu.jpg',
-  premium: '/premium-gift.png',
-  festival: '/festival-indian-sweets-diwali.jpg',
-  gifts: '/image_0901.jpeg',
-}
-
-const categoryDescriptionMap: Record<string, string> = {
-  traditional: 'Classic handmade Putharekulu with authentic recipes',
-  premium: 'Exclusive premium Putharekulu with dry fruits & saffron',
-  festival: 'Special festival collections for every celebration',
-  gifts: 'Beautifully packed gift hampers for every occasion',
-}
-
-const STATIC_CATEGORIES = [
-  {
-    id: 'traditional',
-    name: 'Traditional',
-    description: 'Classic handmade Putharekulu with authentic recipes',
-    image: '/traditional-indian-sweet-putharekulu.jpg',
-  },
-  {
-    id: 'premium',
-    name: 'Premium',
-    description: 'Exclusive premium Putharekulu with dry fruits & saffron',
-    image: '/premium-gift.png',
-  },
-  {
-    id: 'festival',
-    name: 'Festival',
-    description: 'Special festival collections for every celebration',
-    image: '/festival-indian-sweets-diwali.jpg',
-  },
-  {
-    id: 'gifts',
-    name: 'Gift Hampers',
-    description: 'Beautifully packed gift hampers for every occasion',
-    image: '/image_0901.jpeg',
-  },
-]
-
-async function getCategories() {
-  try {
-    // Get unique categories from products
-    const products = await prisma.product.findMany({
-      where: {
-        category: { not: "" }
-      },
-      select: { category: true },
-      distinct: ['category']
-    })
-
-    const uniqueCategories = products.map((p: any) => p.category).filter(Boolean)
-
-    if (uniqueCategories.length === 0) return STATIC_CATEGORIES
-
-    // Create category objects with mapped images
-    return uniqueCategories.map((cat: string) => {
-      const key = cat.toLowerCase().trim()
-      return {
-        id: cat || '',
-        name: cat || '',
-        description: categoryDescriptionMap[key] || `Explore our ${cat} collection`,
-        image: categoryImageMap[key] || '/traditional-indian-sweet-putharekulu.jpg'
-      }
-    })
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    return STATIC_CATEGORIES
+    console.error("Error fetching homepage hero image:", error)
+    return "/traditional-indian-sweet-putharekulu.jpg"
   }
 }
 
 export default async function HomePage() {
-  const featuredProducts = await getFeaturedProducts()
-  const allProducts = await getAllProducts()
-  const banners = await getActiveBanners()
-  const categories = await getCategories()
+  const [products, heroImageUrl] = await Promise.all([
+    getHomepageProducts(),
+    getHomepageHeroImage(),
+  ])
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="relative min-h-screen max-w-full overflow-x-clip bg-background">
       <ScrollProgress />
       <FloatingElements />
       <Header />
       <PromotionBanner />
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-orange-50 to-yellow-50 py-20 overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-r from-orange-50 to-yellow-50 py-12 sm:py-20">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-10 left-10 w-32 h-32 bg-orange-200 rounded-full opacity-20 animate-bounce"></div>
@@ -224,13 +96,13 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid min-w-0 grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
             <FadeInSection direction="left">
-              <div className="space-y-6">
+              <div className="min-w-0 space-y-6">
                 <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200 animate-pulse">
-                  Authentic Since 1950
+                  Authentic Since 2000
                 </Badge>
-                <h1 className="text-4xl lg:text-6xl font-bold text-balance">
+                <h1 className="text-3xl font-bold text-balance sm:text-4xl lg:text-6xl">
                   Traditional
                   <span className="text-orange-600 bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent animate-pulse">
                     {" "}
@@ -261,7 +133,7 @@ export default async function HomePage() {
                     </Button>
                   </Link>
                 </div>
-                <div className="flex items-center space-x-6 pt-4">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4">
                   <div className="flex items-center space-x-1">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400 animate-pulse" />
@@ -275,155 +147,38 @@ export default async function HomePage() {
               </div>
             </FadeInSection>
 
-            <HeroSection />
+            <HeroSection imageUrl={heroImageUrl} />
           </div>
         </div>
       </section>
-
-      {/* What Makes Us So Good Section */}
-      <WhyChooseUs />
-
-      {/* Features Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <FadeInSection>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              {[
-                { icon: Award, title: "Premium Quality", desc: "Made with finest ingredients and traditional methods" },
-                { icon: Truck, title: "Free Shipping", desc: "Free delivery on orders above ₹500" },
-                {
-                  icon: Shield,
-                  title: "Fresh & Hygienic",
-                  desc: "Prepared fresh daily with highest hygiene standards",
-                },
-                { icon: Users, title: "Family Tradition", desc: "Three generations of sweet-making expertise" },
-              ].map((feature, index) => (
-                <FadeInSection key={index} delay={index * 100}>
-                  <div className="text-center space-y-4 group cursor-pointer">
-                    <div className="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center group-hover:bg-orange-200 transition-all duration-300 group-hover:scale-110">
-                      <feature.icon className="h-6 w-6 text-orange-600" />
-                    </div>
-                    <h3 className="font-semibold group-hover:text-orange-600 transition-colors duration-300">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                  </div>
-                </FadeInSection>
-              ))}
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      {/* Categories Section */}
-      <FadeInSection>
-        <section className="py-16 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-100 to-amber-100 animate-pulse"></div>
-          </div>
-
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="text-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold">Our Categories</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Discover our wide range of traditional and premium Putharekulu varieties
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {STATIC_CATEGORIES.map((category: any, index: number) => (
-                <FadeInSection key={category.id} delay={index * 100}>
-                  <Link href={`/products?category=${category.id}`}>
-                    <Card className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 hover:rotate-1">
-                      <div className="relative aspect-square overflow-hidden">
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-110 group-hover:rotate-2"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                        <div className="absolute top-2 right-2 w-2 h-2 bg-yellow-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"></div>
-                        <div className="absolute bottom-4 left-4 w-1 h-1 bg-orange-400 rounded-full opacity-0 group-hover:opacity-100 animate-pulse"></div>
-                      </div>
-                      <CardContent className="p-4 text-center">
-                        <h3 className="font-semibold mb-2 group-hover:text-orange-600 transition-colors duration-300">
-                          {category.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">{category.description}</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </FadeInSection>
-              ))}
-            </div>
-          </div>
-        </section>
-      </FadeInSection>
 
       {/* All Products Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <FadeInSection>
-            <div className="text-center space-y-4 mb-12">
+            <div className="mb-12 space-y-4 text-center">
               <h2 className="text-3xl font-bold">All Products</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+              <p className="mx-auto max-w-2xl text-muted-foreground">
                 Explore our complete collection of authentic Putharekulu varieties
               </p>
             </div>
           </FadeInSection>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {allProducts.map((product: any, index: number) => (
-              <FadeInSection key={product.id} delay={index * 100}>
-                <div className="transform hover:scale-105 transition-transform duration-300">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {products.map((product, index) => (
+              <FadeInSection key={product.id} delay={index * 100} className="min-w-0">
+                <div className="transform transition-transform duration-300 hover:scale-105">
                   <ProductCard product={product} />
                 </div>
               </FadeInSection>
             ))}
           </div>
           <FadeInSection delay={400}>
-            <div className="text-center mt-8">
+            <div className="mt-8 text-center">
               <Link href="/products">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="hover:bg-orange-50 transform hover:scale-105 transition-all duration-200"
-                >
-                  View All Products
-                </Button>
-              </Link>
-            </div>
-          </FadeInSection>
-        </div>
-      </section>
-
-      {/* Featured Products */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <FadeInSection>
-            <div className="text-center space-y-4 mb-12">
-              <h2 className="text-3xl font-bold">Featured Products</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our most popular and loved Putharekulu varieties
-              </p>
-            </div>
-          </FadeInSection>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product: any, index: number) => (
-              <FadeInSection key={product.id} delay={index * 100}>
-                <div className="transform hover:scale-105 transition-transform duration-300">
-                  <ProductCard product={product} />
-                </div>
-              </FadeInSection>
-            ))}
-          </div>
-          <FadeInSection delay={400}>
-            <div className="text-center mt-8">
-              <Link href="/products">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="hover:bg-orange-50 transform hover:scale-105 transition-all duration-200 bg-transparent"
+                  className="transition-all duration-200 hover:scale-105 hover:bg-orange-50"
                 >
                   View All Products
                 </Button>
@@ -490,8 +245,8 @@ export default async function HomePage() {
                 Read what our happy customers have to say about our products
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
+            <TestimonialsCarousel
+              testimonials={[
                 {
                   name: "Priya Sharma",
                   location: "Hyderabad",
@@ -510,35 +265,38 @@ export default async function HomePage() {
                   review: "Authentic taste and fresh delivery. Will definitely order again!",
                   rating: 5,
                 },
-              ].map((testimonial, index) => (
-                <FadeInSection key={index} delay={index * 150}>
-                  <Card className="p-6 transform hover:scale-105 hover:shadow-lg transition-all duration-300">
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center space-x-1">
-                        {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400 animate-pulse" />
-                        ))}
-                      </div>
-                      <p className="text-muted-foreground italic">"{testimonial.review}"</p>
-                      <div>
-                        <p className="font-semibold">{testimonial.name}</p>
-                        <p className="text-sm text-muted-foreground">{testimonial.location}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </FadeInSection>
-              ))}
-            </div>
+                {
+                  name: "Avinash Reddy",
+                  location: "Nellore",
+                  review: "The sweets were fresh and delicious, and the traditional flavor made them a hit with my family.",
+                  rating: 5,
+                },
+                {
+                  name: "Ramesh Babu",
+                  location: "Srikakulam",
+                  review: "Loved the crisp texture and careful packing. A delightful treat to share with everyone.",
+                  rating: 5,
+                },
+                {
+                  name: "Pankaj Sharma",
+                  location: "Mumbai",
+                  review: "Authentic taste, great quality, and arrived in excellent condition. I would happily try these again.",
+                  rating: 5,
+                },
+              ]}
+            />
           </div>
         </section>
       </FadeInSection>
+
+      <WhyChooseUs />
 
       {/* FAQ Section */}
       <FAQ />
 
       <Footer />
       <PromotionPopup />
-      <Chatbot />
+      <LazyChatbot />
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import Link from "next/link"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -16,7 +16,7 @@ import { LoadingSpinner } from "@/components/loading-spinner"
 import { ProductImageGallery } from "@/components/product-image-gallery"
 import { ProductReviews } from "@/components/product-reviews"
 import { ProductFAQ } from "@/components/product-faq"
-import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ArrowLeft, Plus, Minus, Loader2, CheckCircle } from "lucide-react"
+import { Star, ShoppingCart, Heart, Share2, Truck, Shield, Ban, ArrowLeft, Plus, Minus, Loader2, CheckCircle } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/hooks/use-auth"
 import { toast } from "sonner"
@@ -25,7 +25,7 @@ import type { Product } from "@/lib/types"
 export default function ProductDetailPage() {
   const params = useParams()
   const router = useRouter()
-  const { addToCart, isLoading: cartLoading } = useCart()
+  const { addToCart } = useCart()
   const { user } = useAuth()
   const [product, setProduct] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -287,9 +287,9 @@ export default function ProductDetailPage() {
                   className="col-span-2 h-14 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all" 
                   size="lg" 
                   onClick={handleAddToCart} 
-                  disabled={!product.inStock || isAdding || cartLoading}
+                  disabled={!product.inStock || isAdding}
                 >
-                  {isAdding || cartLoading ? (
+                  {isAdding ? (
                     <>
                       <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                       Adding...
@@ -328,7 +328,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase">Free Delivery</p>
-                  <p className="text-sm font-medium text-foreground">On orders above ₹500</p>
+                  <p className="text-sm font-medium text-foreground">On orders of ₹1,500 or more</p>
                 </div>
               </div>
               <div className="text-center space-y-3">
@@ -342,11 +342,11 @@ export default function ProductDetailPage() {
               </div>
               <div className="text-center space-y-3">
                 <div className="bg-green-100 dark:bg-green-900/30 rounded-full h-12 w-12 flex items-center justify-center mx-auto">
-                  <RotateCcw className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  <Ban className="h-6 w-6 text-orange-600 dark:text-orange-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase">Easy Return</p>
-                  <p className="text-sm font-medium text-foreground">7-day policy</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">Final Sale</p>
+                  <p className="text-sm font-medium text-foreground">No returns or refunds</p>
                 </div>
               </div>
             </div>

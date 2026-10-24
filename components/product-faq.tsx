@@ -62,9 +62,8 @@ export function ProductFAQ({ productName, faqs }: ProductFAQProps) {
     },
     {
       id: "faq-8",
-      question: "What is your return and exchange policy?",
-      answer:
-        "We offer a hassle-free 7-day return policy. If you receive a defective product or if it doesn't meet your expectations, you can return it for a full refund or replacement. Please ensure the product is in its original packaging.",
+      question: "What is your return and refund policy?",
+      answer: "All sales are final. We do not accept returns, exchanges, or refund requests.",
     },
   ]
 

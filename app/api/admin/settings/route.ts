@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { requireAuth, apiResponse, apiError } from '@/lib/api-middleware'
 import { prisma } from '@/lib/prisma'
 
@@ -61,6 +62,7 @@ export async function PUT(request: NextRequest) {
       })
     }
 
+    revalidatePath('/')
     return apiResponse({ settings })
   } catch (error: any) {
     console.error('Error updating settings:', error)

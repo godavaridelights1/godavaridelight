@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
 import { requireAdmin, apiResponse, apiError } from '@/lib/api-middleware'
 import { prisma } from '@/lib/prisma'
+import { getProductImageUrl } from '@/lib/product-image'
 
 // GET /api/products/[id] - Get single product with images, reviews, and related products
 export async function GET(
@@ -57,6 +58,11 @@ export async function GET(
     // Transform data
     const transformedProduct = {
       ...product,
+      image: product.image ? getProductImageUrl(product.id, product.image) : '',
+      images: product.images.map((image) => ({
+        ...image,
+        url: getProductImageUrl(product.id, image.url, image.id),
+      })),
       reviews: product.reviews.map((review: any) => ({
         ...review,
         userName: review.user?.name,
@@ -71,6 +77,8 @@ export async function GET(
           : 0
         return {
           ...p,
+          image: p.image ? getProductImageUrl(p.id, p.image) : '',
+          images: [],
           averageRating: pAvgRating,
           reviewCount: p.reviews.length,
           reviews: undefined // Remove reviews from related products response

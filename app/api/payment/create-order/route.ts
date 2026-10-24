@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
       return apiError('Order not found', 404)
     }
 
+    if (order.paymentMethod !== 'online') {
+      return apiError('Online payment is not available for this order', 400)
+    }
+
     if (order.paymentStatus !== 'pending') {
       return apiError('Payment already processed', 400)
     }
