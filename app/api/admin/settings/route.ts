@@ -3,6 +3,8 @@ import { revalidatePath } from 'next/cache'
 import { requireAuth, apiResponse, apiError } from '@/lib/api-middleware'
 import { prisma } from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 // GET /api/admin/settings - Get all site settings
 export async function GET(request: NextRequest) {
   try {
