@@ -2,7 +2,6 @@
 
 import { ResponsiveImage as Image } from "@/components/responsive-image"
 import { FadeInSection } from "@/components/fade-in-section"
-import { useSiteSettings } from "@/hooks/use-site-settings"
 import { Check, Heart, Star } from "lucide-react"
 
 const values = [
@@ -23,10 +22,7 @@ const values = [
   },
 ]
 
-export function WhyGodavariDelights() {
-  const { settings } = useSiteSettings()
-  const whyGodavariImage = settings?.whyGodavariImageUrl || "/homepage-about-section.jpg"
-
+export function WhyGodavariDelights({ imageUrl }: { imageUrl: string }) {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-white via-orange-50/20 to-white py-14 sm:py-16 lg:py-20">
       <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-gradient-to-bl from-orange-200 to-transparent opacity-10 blur-3xl" />
@@ -34,7 +30,7 @@ export function WhyGodavariDelights() {
 
       <FadeInSection className="relative z-10 w-full">
         <Image
-          src={whyGodavariImage}
+          src={imageUrl}
           alt="The story, mission, and values behind Godavari Delights"
           width={853}
           height={1280}

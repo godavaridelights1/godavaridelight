@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
 import { requireAdmin } from '@/lib/api-middleware'
+import { ImageStorageConfigurationError, storeImage } from '@/lib/image-storage'
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,9 +8,9 @@ export async function POST(request: NextRequest) {
     if (authResult instanceof Response) return authResult
 
     const formData = await request.formData()
-    const file = formData.get('file') as File
+    const file = formData.get('file')
     
-    if (!file) {
+    if (!(file instanceof File)) {
       return NextResponse.json(
         { error: 'No file uploaded' },
         { status: 400 }
@@ -28,46 +26,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024 // 5MB
+    // Keep multipart uploads below Vercel Function's request body limit.
+    const maxSize = 4 * 1024 * 1024
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: 'File too large. Maximum size is 5MB.' },
+        { error: 'File too large. Maximum size is 4MB.' },
         { status: 400 }
       )
     }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Create unique filename
-    const timestamp = Date.now()
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    const filename = `${timestamp}-${originalName}`
-    
-    // Ensure uploads directory exists
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
-    }
-
-    // Save file
-    const filepath = join(uploadsDir, filename)
-    await writeFile(filepath, buffer)
-
-    // Return the public URL
-    const url = `/uploads/${filename}`
+    const image = await storeImage(file)
 
     return NextResponse.json({
       success: true,
-      url,
-      filename
+      url: image.url,
+      filename: image.filename,
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('Upload error:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to upload file' },
-      { status: 500 }
+      { error: error instanceof Error ? error.message : 'Failed to upload file' },
+      { status: error instanceof ImageStorageConfigurationError ? 503 : 500 }
     )
   }
 }

@@ -58,10 +58,10 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
       return
     }
 
-    // Validate file size (5MB)
-    const maxSize = 5 * 1024 * 1024
+    // Keep multipart uploads below Vercel Function's request body limit.
+    const maxSize = 4 * 1024 * 1024
     if (file.size > maxSize) {
-      toast.error('File too large. Maximum size is 5MB')
+      toast.error('File too large. Maximum size is 4MB')
       return
     }
 
@@ -164,7 +164,7 @@ export function ImageUpload({ value, onChange, onRemove, disabled }: ImageUpload
                       </button>
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      PNG, JPG, WebP or GIF (max 5MB)
+                      PNG, JPG, WebP or GIF (max 4MB)
                     </p>
                   </div>
                   <Button

@@ -60,22 +60,33 @@ async function getHomepageProducts() {
   }
 }
 
-async function getHomepageHeroImage() {
+async function getHomepageImages() {
   try {
     const settings = await prisma.siteSettings.findFirst({
-      select: { heroSectionImageUrl: true },
+      select: {
+        heroSectionImageUrl: true,
+        whyGodavariImageUrl: true,
+      },
     })
-    return settings?.heroSectionImageUrl || "/traditional-indian-sweet-putharekulu.jpg"
+    return {
+      heroImageUrl:
+        settings?.heroSectionImageUrl || "/traditional-indian-sweet-putharekulu.jpg",
+      whyGodavariImageUrl:
+        settings?.whyGodavariImageUrl || "/homepage-about-section.jpg",
+    }
   } catch (error) {
-    console.error("Error fetching homepage hero image:", error)
-    return "/traditional-indian-sweet-putharekulu.jpg"
+    console.error("Error fetching homepage images:", error)
+    return {
+      heroImageUrl: "/traditional-indian-sweet-putharekulu.jpg",
+      whyGodavariImageUrl: "/homepage-about-section.jpg",
+    }
   }
 }
 
 export default async function HomePage() {
-  const [products, heroImageUrl] = await Promise.all([
+  const [products, homepageImages] = await Promise.all([
     getHomepageProducts(),
-    getHomepageHeroImage(),
+    getHomepageImages(),
   ])
 
   return (
@@ -147,7 +158,7 @@ export default async function HomePage() {
               </div>
             </FadeInSection>
 
-            <HeroSection imageUrl={heroImageUrl} />
+            <HeroSection imageUrl={homepageImages.heroImageUrl} />
           </div>
         </div>
       </section>
@@ -189,7 +200,7 @@ export default async function HomePage() {
       </section>
 
       {/* Why Godavari Delights Section */}
-      <WhyGodavariDelights />
+      <WhyGodavariDelights imageUrl={homepageImages.whyGodavariImageUrl} />
 
       {/* Newsletter Section */}
       <FadeInSection>
