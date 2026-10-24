@@ -134,6 +134,16 @@ export default function ContactPage() {
                     <p className="text-sm text-muted-foreground">
                       <strong>Landmark:</strong> Near Atreyapuram, opposite to SBI Bank
                     </p>
+                    <p className="text-sm">
+                      <a
+                        href="https://maps.app.goo.gl/NHHbxg74eSqvhLkm6"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-orange-700 underline underline-offset-4 hover:text-orange-800"
+                      >
+                        Precice location
+                      </a>
+                    </p>
                   </div>
                 </CardContent>
               </Card>
