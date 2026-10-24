@@ -2,9 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
+import { requireAdmin } from '@/lib/api-middleware'
 
 export async function POST(request: NextRequest) {
   try {
+    const authResult = await requireAdmin(request)
+    if (authResult instanceof Response) return authResult
+
     const formData = await request.formData()
     const file = formData.get('file') as File
     

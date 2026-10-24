@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { LoadingSpinner } from "@/components/loading-spinner"
 import { toast } from "sonner"
 import { MapPin, Plus, Check, Tag, Truck, CreditCard, Package } from "lucide-react"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 
 interface Address {
   id: string
@@ -32,11 +32,11 @@ interface Address {
 export default function CheckoutPage() {
   const router = useRouter()
   const { user, session } = useAuth()
-  const { cart, getCartTotal, getCartCount, clearCart, isLoading: cartLoading } = useCart()
+  const { cart, getCartTotal, getCartCount, isLoading: cartLoading } = useCart()
   
   const [addresses, setAddresses] = useState<Address[]>([])
   const [selectedAddress, setSelectedAddress] = useState<string>("")
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod")
+  const paymentMethod = "online"
   const [couponCode, setCouponCode] = useState("")
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null)
   const [discount, setDiscount] = useState(0)
@@ -56,7 +56,7 @@ export default function CheckoutPage() {
   const [isSavingAddress, setIsSavingAddress] = useState(false)
 
   const subtotal = getCartTotal()
-  const deliveryCharge = subtotal >= 500 ? 0 : 50
+  const deliveryCharge = subtotal >= 1500 ? 0 : 100
   const total = subtotal - discount + deliveryCharge
 
   useEffect(() => {
@@ -304,24 +304,12 @@ export default function CheckoutPage() {
 
       const result = await response.json()
 
-      if (paymentMethod === 'online') {
-        // Redirect to payment gateway (Razorpay)
-        const orderId = result.data?.order?.id
-        if (!orderId) {
-          throw new Error('Order ID not found in response')
-        }
-        toast.success('Redirecting to payment...')
-        router.push(`/payment?orderId=${orderId}`)
-      } else {
-        // COD order placed successfully
-        const orderId = result.data?.order?.id
-        if (!orderId) {
-          throw new Error('Order ID not found in response')
-        }
-        toast.success('Order placed successfully!')
-        await clearCart()
-        router.push(`/orders/${orderId}`)
+      const orderId = result.data?.order?.id
+      if (!orderId) {
+        throw new Error('Order ID not found in response')
       }
+      toast.success('Redirecting to payment...')
+      router.push(`/payment?orderId=${orderId}`)
     } catch (error: any) {
       console.error('Error placing order:', error)
       toast.error(error.message || 'Failed to place order')
@@ -569,22 +557,13 @@ export default function CheckoutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup value={paymentMethod} onValueChange={(value: "cod" | "online") => setPaymentMethod(value)}>
-                  <div className="flex items-center space-x-3 border rounded-lg p-4">
-                    <RadioGroupItem value="cod" id="cod" />
-                    <label htmlFor="cod" className="flex-1 cursor-pointer">
-                      <div className="font-semibold">Cash on Delivery</div>
-                      <p className="text-sm text-muted-foreground">Pay when you receive</p>
-                    </label>
+                <div className="flex items-center space-x-3 rounded-lg border p-4">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <div className="font-semibold">Online Payment</div>
+                    <p className="text-sm text-muted-foreground">Pay via Razorpay (Cards, UPI, Wallets)</p>
                   </div>
-                  <div className="flex items-center space-x-3 border rounded-lg p-4">
-                    <RadioGroupItem value="online" id="online" />
-                    <label htmlFor="online" className="flex-1 cursor-pointer">
-                      <div className="font-semibold">Online Payment</div>
-                      <p className="text-sm text-muted-foreground">Pay via Razorpay (Cards, UPI, Wallets)</p>
-                    </label>
-                  </div>
-                </RadioGroup>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -684,9 +663,9 @@ export default function CheckoutPage() {
                       )}
                     </span>
                   </div>
-                  {subtotal < 500 && (
+                  {subtotal < 1500 && (
                     <p className="text-xs text-muted-foreground">
-                      Add ₹{(500 - subtotal).toFixed(2)} more for FREE delivery
+                      Add ₹{(1500 - subtotal).toFixed(2)} more for FREE delivery
                     </p>
                   )}
                   <Separator />

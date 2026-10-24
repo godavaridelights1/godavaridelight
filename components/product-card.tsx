@@ -1,8 +1,8 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import { ResponsiveImage } from "@/components/responsive-image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +17,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addToCart, isLoading: cartLoading } = useCart()
+  const { addToCart } = useCart()
   const { user } = useAuth()
   const router = useRouter()
   const [isAdding, setIsAdding] = useState(false)
@@ -47,13 +47,14 @@ export function ProductCard({ product }: ProductCardProps) {
   }
 
   return (
-    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="group min-w-0 overflow-hidden transition-all duration-300 hover:shadow-lg">
       <div className="relative aspect-square overflow-hidden">
         <Link href={`/products/${product.id}`}>
-          <Image
+          <ResponsiveImage
             src={product.image || '/placeholder.svg'}
             alt={product.name}
             fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
           />
         </Link>
@@ -68,22 +69,22 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="min-w-0 p-2 sm:p-4">
         <div className="space-y-2">
-          <h3 className="font-semibold text-lg line-clamp-1">{product.name}</h3>
+          <h3 className="line-clamp-2 text-sm font-semibold sm:text-lg">{product.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-2">{product.description}</p>
 
-          <div className="flex items-center space-x-1">
+          <div className="flex min-w-0 items-center space-x-0.5 sm:space-x-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <Star key={i} className="h-3 w-3 shrink-0 fill-yellow-400 text-yellow-400 sm:h-4 sm:w-4" />
             ))}
-            <span className="text-sm text-muted-foreground ml-2">(4.8)</span>
+            <span className="ml-1 text-xs text-muted-foreground sm:ml-2 sm:text-sm">(4.8)</span>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <span className="text-xl font-bold">₹{product.price}</span>
+          <div className="flex flex-wrap items-center gap-x-2">
+            <span className="text-base font-bold sm:text-xl">₹{product.price}</span>
             {product.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice}</span>
+              <span className="text-xs text-muted-foreground line-through sm:text-sm">₹{product.originalPrice}</span>
             )}
           </div>
 
@@ -95,19 +96,20 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 space-y-2">
-        <div className="flex space-x-2 w-full">
+      <CardFooter className="p-2 pt-0 sm:p-4 sm:pt-0">
+        <div className="flex w-full flex-col gap-2 sm:flex-row">
           <Link href={`/products/${product.id}`} className="flex-1">
-            <Button variant="outline" className="w-full bg-transparent">
+            <Button variant="outline" size="sm" className="w-full bg-transparent px-2 text-xs sm:text-sm">
               View Details
             </Button>
           </Link>
           <Button 
-            className="flex-1" 
-            disabled={!product.inStock || isAdding || cartLoading}
+            size="sm"
+            className="flex-1 px-2 text-xs sm:text-sm"
+            disabled={!product.inStock || isAdding}
             onClick={handleAddToCart}
           >
-            {isAdding || cartLoading ? (
+            {isAdding ? (
               <>
                 <Loader2 className="h-4 w-4 mr-1 animate-spin" />
                 Adding...

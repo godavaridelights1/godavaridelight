@@ -5,7 +5,7 @@ import { X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PromotionService } from "@/lib/promotion-service"
 import type { Promotion } from "@/lib/types"
-import Image from "next/image"
+import { ResponsiveImage } from "@/components/responsive-image"
 
 export function PromotionBanner() {
   const [banners, setBanners] = useState<Promotion[]>([])
@@ -47,7 +47,7 @@ export function PromotionBanner() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4 flex-1">
             <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
-              <Image src={banner.image || "/placeholder.svg"} alt={banner.title} fill className="object-cover" />
+              <ResponsiveImage src={banner.image || "/placeholder.svg"} alt={banner.title} fill sizes="48px" className="object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-amber-900 truncate">{banner.title}</h3>

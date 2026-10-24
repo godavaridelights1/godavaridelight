@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -233,7 +232,7 @@ export default function BulkOrderPage() {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          placeholder="+91 9885317726"
+                          placeholder="+91 9885469456"
                           required
                         />
                       </div>
@@ -352,7 +351,6 @@ export default function BulkOrderPage() {
         </div>
       </section>
 
-      <Footer />
     </div>
   )
 }

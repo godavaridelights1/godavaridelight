@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { BrandMark } from "@/components/brand-mark"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
@@ -82,12 +83,9 @@ export default function ForgotPasswordPage() {
 
         <div className="text-center">
           <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">AP</span>
-            </div>
+            <BrandMark size={40} />
             <div className="flex flex-col">
-              <span className="font-bold text-xl leading-none">Atreyapuram</span>
-              <span className="text-sm text-muted-foreground">Putharekulu</span>
+              <span className="font-bold text-xl leading-none">Godavari Delights</span>
             </div>
           </Link>
         </div>

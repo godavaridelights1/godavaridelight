@@ -8,6 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
+import { BrandMark } from "@/components/brand-mark"
 import {
   LayoutDashboard,
   Package,
@@ -144,9 +145,7 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="p-6 border-b">
         <Link href="/admin" className="flex items-center space-x-2">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">AP</span>
-          </div>
+          <BrandMark size={32} />
           <div className="flex flex-col">
             <span className="font-bold text-lg leading-none">Admin Panel</span>
             <span className="text-xs text-muted-foreground">Putharekulu Management</span>

@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
+import { BrandMark } from "@/components/brand-mark"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -49,12 +50,8 @@ export default function RegisterPage() {
       return
     }
 
-    console.log('Starting registration for:', formData.email)
-
     try {
       const success = await register(formData.email, formData.password, formData.name)
-
-      console.log('Registration result:', success)
 
       if (success) {
         toast({
@@ -67,9 +64,9 @@ export default function RegisterPage() {
       } else {
         setError("Registration failed. Please try again.")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error)
-      setError(error.message || "Registration failed. Please try again.")
+      setError(error instanceof Error ? error.message : "Registration failed. Please try again.")
     }
   }
 
@@ -81,42 +78,37 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Back to Home */}
-        <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary">
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Home
-        </Link>
-
-        {/* Logo */}
-        <div className="text-center">
-          <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">GD</span>
+    <div className="flex min-h-dvh flex-col items-center bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100 px-3 py-2 sm:justify-center sm:px-6 sm:py-8">
+      <div className="my-auto w-full max-w-md">
+        <Card className="gap-0 overflow-hidden border-white/80 bg-white/95 py-0 shadow-xl shadow-orange-950/10">
+          <div className="space-y-2 border-b bg-white/80 px-4 py-2 sm:space-y-3 sm:px-6 sm:py-3">
+            <Link href="/" className="inline-flex min-h-7 items-center text-sm text-muted-foreground transition-colors hover:text-primary">
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back to Home
+            </Link>
+            <div className="rounded-xl border border-orange-100 bg-gradient-to-r from-orange-50 to-amber-50 px-3 py-1.5 shadow-sm sm:py-3">
+              <Link href="/" className="flex items-center justify-center gap-3">
+                <BrandMark size={36} />
+                <span className="flex flex-col text-left">
+                  <span className="font-bold leading-tight">Godavari Delights</span>
+                  <span className="text-xs text-muted-foreground">Traditional Putharekulu</span>
+                </span>
+              </Link>
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xl leading-none">Godavari Delights</span>
-              <span className="text-sm text-muted-foreground">Traditional Putharekulu</span>
-            </div>
-          </Link>
-        </div>
-
-        {/* Registration Form */}
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Create Account</CardTitle>
-            <CardDescription>Join us to enjoy authentic Putharekulu delivered to your doorstep</CardDescription>
+          </div>
+          <CardHeader className="gap-1 px-5 pb-2 pt-3 text-center sm:px-8 sm:pb-3 sm:pt-5">
+            <CardTitle className="text-xl sm:text-2xl">Create Account</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Join us for authentic Putharekulu</CardDescription>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+          <CardContent className="px-5 pb-3 sm:px-8 sm:pb-4">
+            <form onSubmit={handleSubmit} className="space-y-1.5 sm:space-y-3">
               {error && (
                 <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
 
-              <div className="space-y-2">
+              <div className="space-y-0.5 sm:space-y-1">
                 <label htmlFor="name" className="text-sm font-medium">
                   Full Name
                 </label>
@@ -129,13 +121,14 @@ export default function RegisterPage() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your full name"
-                    className="pl-10"
+                    className="h-9 pl-10"
+                    autoComplete="name"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-0.5 sm:space-y-1">
                 <label htmlFor="email" className="text-sm font-medium">
                   Email Address
                 </label>
@@ -148,15 +141,16 @@ export default function RegisterPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your@email.com"
-                    className="pl-10"
+                    className="h-9 pl-10"
+                    autoComplete="email"
                     required
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-0.5 sm:space-y-1">
                 <label htmlFor="password" className="text-sm font-medium">
-                  Password
+                  Password (minimum 6 characters)
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -167,7 +161,8 @@ export default function RegisterPage() {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Create a password"
-                    className="pl-10 pr-10"
+                    className="h-9 pl-10 pr-10"
+                    autoComplete="new-password"
                     required
                   />
                   <button
@@ -178,10 +173,9 @@ export default function RegisterPage() {
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
-                <p className="text-xs text-muted-foreground">Password must be at least 6 characters long</p>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-0.5 sm:space-y-1">
                 <label htmlFor="confirmPassword" className="text-sm font-medium">
                   Confirm Password
                 </label>
@@ -194,7 +188,8 @@ export default function RegisterPage() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     placeholder="Confirm your password"
-                    className="pl-10 pr-10"
+                    className="h-9 pl-10 pr-10"
+                    autoComplete="new-password"
                     required
                   />
                   <button
@@ -225,12 +220,12 @@ export default function RegisterPage() {
                 </label>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="h-10 w-full" disabled={isLoading}>
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
           </CardContent>
-          <CardFooter className="text-center">
+          <CardFooter className="justify-center border-t px-5 py-1.5 text-center sm:px-8 sm:py-3">
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link href="/login" className="text-primary hover:underline font-medium">

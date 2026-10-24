@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,6 +15,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, Chrome, Loader2 } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { useToast } from "@/hooks/use-toast"
+import { BrandMark } from "@/components/brand-mark"
+import { MaintenanceOverlay } from "@/components/maintenance-overlay"
 import {
   InputOTP,
   InputOTPGroup,
@@ -30,7 +33,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [otpSent, setOtpSent] = useState(false)
-  const { login, loginWithGoogle, loginWithPhone, verifyOTP, isLoading, user } = useAuth()
+  const { login, loginWithPhone, verifyOTP, isLoading, user } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -114,7 +117,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      await loginWithGoogle()
+      await signIn("google", { callbackUrl: redirect })
     } catch (error) {
       toast({
         title: "Error",
@@ -132,49 +135,44 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Back to Home */}
-        <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary">
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Back to Home
-        </Link>
-
-        {/* Logo */}
-        <div className="text-center">
-          <Link href="/" className="inline-flex items-center space-x-2">
-            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">GD</span>
+    <div className="flex min-h-dvh flex-col items-center bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100 px-3 py-2 sm:justify-center sm:px-6 sm:py-8">
+      <div className="my-auto w-full max-w-md">
+        <Card className="gap-0 overflow-hidden border-white/80 bg-white/95 py-0 shadow-xl shadow-orange-950/10">
+          <div className="space-y-2 border-b bg-white/80 px-4 py-2 sm:space-y-3 sm:px-6 sm:py-3">
+            <Link href="/" className="inline-flex min-h-7 items-center text-sm text-muted-foreground transition-colors hover:text-primary">
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Back to Home
+            </Link>
+            <div className="rounded-xl border border-orange-100 bg-gradient-to-r from-orange-50 to-amber-50 px-3 py-1.5 shadow-sm sm:py-3">
+              <Link href="/" className="flex items-center justify-center gap-3">
+                <BrandMark size={36} />
+                <span className="flex flex-col text-left">
+                  <span className="font-bold leading-tight">Godavari Delights</span>
+                  <span className="text-xs text-muted-foreground">Traditional Putharekulu</span>
+                </span>
+              </Link>
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xl leading-none">Godavari Delights</span>
-              <span className="text-sm text-muted-foreground">Traditional Putharekulu</span>
-            </div>
-          </Link>
-        </div>
-
-        {/* Login Form */}
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome Back</CardTitle>
-            <CardDescription>Sign in to your account to continue shopping</CardDescription>
+          </div>
+          <CardHeader className="gap-1 px-5 pb-2 pt-3 text-center sm:px-8 sm:pb-3 sm:pt-5">
+            <CardTitle className="text-xl sm:text-2xl">Welcome Back</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Sign in to continue shopping</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-3 sm:px-8 sm:pb-4">
             <Tabs defaultValue="email" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid h-10 w-full grid-cols-2">
                 <TabsTrigger value="email">Email</TabsTrigger>
                 <TabsTrigger value="phone">Phone</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="email" className="space-y-4">
-                <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <TabsContent value="email" className="mt-2 space-y-2 sm:mt-3 sm:space-y-3">
+                <form onSubmit={handleEmailSubmit} className="space-y-2.5 sm:space-y-3">
                   {error && (
                     <Alert variant="destructive">
                       <AlertDescription>{error}</AlertDescription>
                     </Alert>
                   )}
 
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <label htmlFor="email" className="text-sm font-medium">
                       Email Address
                     </label>
@@ -187,13 +185,14 @@ export default function LoginPage() {
                         value={formData.email}
                         onChange={handleChange}
                         placeholder="your@email.com"
-                        className="pl-10"
+                        className="h-9 pl-10"
+                        autoComplete="email"
                         required
                       />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <label htmlFor="password" className="text-sm font-medium">
                       Password
                     </label>
@@ -206,7 +205,8 @@ export default function LoginPage() {
                         value={formData.password}
                         onChange={handleChange}
                         placeholder="Enter your password"
-                        className="pl-10 pr-10"
+                        className="h-9 pl-10 pr-10"
+                        autoComplete="current-password"
                         required
                       />
                       <button
@@ -225,91 +225,100 @@ export default function LoginPage() {
                     </Link>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="h-10 w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
               </TabsContent>
 
               <TabsContent value="phone" className="space-y-4">
-                <form onSubmit={handlePhoneSubmit} className="space-y-4">
-                  {error && (
-                    <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
+                <div className="relative overflow-hidden rounded-xl">
+                  <fieldset
+                    disabled
+                    aria-hidden="true"
+                    className="m-0 min-w-0 border-0 p-0 blur-sm"
+                  >
+                    <form onSubmit={handlePhoneSubmit} className="space-y-4">
+                      {error && (
+                        <Alert variant="destructive">
+                          <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                      )}
 
-                  <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-medium">
-                      Phone Number
-                    </label>
-                    <div className="flex gap-2">
-                      <span className="flex items-center px-3 bg-muted rounded-l-md text-sm font-medium text-muted-foreground">
-                        +91
-                      </span>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => {
-                          const value = e.target.value.replace(/\D/g, '').slice(0, 10)
-                          setFormData({ ...formData, phone: value })
-                        }}
-                        placeholder="Enter 10-digit mobile number"
-                        className="rounded-r-md"
-                        maxLength={10}
-                        required
-                        disabled={otpSent}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {!otpSent ? "We'll send you an OTP to verify" : "OTP sent to your number"}
-                    </p>
-                  </div>
-
-                  {otpSent && (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium block mb-4">
-                          Enter 6-Digit OTP
+                      <div className="space-y-2">
+                        <label htmlFor="phone" className="text-sm font-medium">
+                          Phone Number
                         </label>
-                        <InputOTP
-                          maxLength={6}
-                          value={formData.otp}
-                          onChange={(otp) => setFormData({ ...formData, otp })}
-                        >
-                          <InputOTPGroup className="flex justify-between w-full gap-2">
-                            <InputOTPSlot index={0} className="flex-1 h-12 text-lg" />
-                            <InputOTPSlot index={1} className="flex-1 h-12 text-lg" />
-                            <InputOTPSlot index={2} className="flex-1 h-12 text-lg" />
-                            <InputOTPSlot index={3} className="flex-1 h-12 text-lg" />
-                            <InputOTPSlot index={4} className="flex-1 h-12 text-lg" />
-                            <InputOTPSlot index={5} className="flex-1 h-12 text-lg" />
-                          </InputOTPGroup>
-                        </InputOTP>
+                        <div className="flex gap-2">
+                          <span className="flex items-center rounded-l-md bg-muted px-3 text-sm font-medium text-muted-foreground">
+                            +91
+                          </span>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => {
+                              const value = e.target.value.replace(/\D/g, '').slice(0, 10)
+                              setFormData({ ...formData, phone: value })
+                            }}
+                            placeholder="Enter 10-digit mobile number"
+                            className="rounded-r-md"
+                            maxLength={10}
+                            required
+                            disabled={otpSent}
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {!otpSent ? "We'll send you an OTP to verify" : "OTP sent to your number"}
+                        </p>
                       </div>
 
-                      <Button
-                        type="button"
-                        variant="link"
-                        size="sm"
-                        onClick={() => setOtpSent(false)}
-                        className="text-xs"
-                      >
-                        Change phone number
-                      </Button>
-                    </div>
-                  )}
+                      {otpSent && (
+                        <div className="space-y-4">
+                          <div>
+                            <label className="mb-4 block text-sm font-medium">
+                              Enter 6-Digit OTP
+                            </label>
+                            <InputOTP
+                              maxLength={6}
+                              value={formData.otp}
+                              onChange={(otp) => setFormData({ ...formData, otp })}
+                            >
+                              <InputOTPGroup className="flex w-full justify-between gap-2">
+                                <InputOTPSlot index={0} className="h-12 flex-1 text-lg" />
+                                <InputOTPSlot index={1} className="h-12 flex-1 text-lg" />
+                                <InputOTPSlot index={2} className="h-12 flex-1 text-lg" />
+                                <InputOTPSlot index={3} className="h-12 flex-1 text-lg" />
+                                <InputOTPSlot index={4} className="h-12 flex-1 text-lg" />
+                                <InputOTPSlot index={5} className="h-12 flex-1 text-lg" />
+                              </InputOTPGroup>
+                            </InputOTP>
+                          </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Processing..." : otpSent ? "Verify OTP" : "Send OTP"}
-                  </Button>
-                </form>
+                          <Button
+                            type="button"
+                            variant="link"
+                            size="sm"
+                            onClick={() => setOtpSent(false)}
+                            className="text-xs"
+                          >
+                            Change phone number
+                          </Button>
+                        </div>
+                      )}
+
+                      <Button type="submit" className="w-full" disabled={isLoading}>
+                        {isLoading ? "Processing..." : otpSent ? "Verify OTP" : "Send OTP"}
+                      </Button>
+                    </form>
+                  </fieldset>
+                  <MaintenanceOverlay />
+                </div>
               </TabsContent>
             </Tabs>
 
-            <div className="relative my-6">
+            <div className="relative my-3 sm:my-4">
               <div className="absolute inset-0 flex items-center">
                 <span className="w-full border-t" />
               </div>
@@ -321,14 +330,14 @@ export default function LoginPage() {
             <Button
               type="button"
               variant="outline"
-              className="w-full"
+              className="h-10 w-full"
               onClick={handleGoogleLogin}
             >
               <Chrome className="mr-2 h-4 w-4" />
               Sign in with Google
             </Button>
           </CardContent>
-          <CardFooter className="text-center">
+          <CardFooter className="justify-center border-t px-5 py-2.5 text-center sm:px-8 sm:py-3">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Link href="/register" className="text-primary hover:underline font-medium">

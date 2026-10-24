@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
-import { X, Star, ShoppingCart, Heart, Plus, Minus, Loader2, Truck, Shield, RotateCcw, Check } from "lucide-react"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
+import { X, Star, ShoppingCart, Heart, Plus, Minus, Loader2, Truck, Shield, Ban, Check } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
@@ -16,7 +16,7 @@ interface ProductModalProps {
 }
 
 export function ProductModal({ open, onClose, product }: ProductModalProps) {
-  const { addToCart, isLoading: cartLoading } = useCart()
+  const { addToCart } = useCart()
   const { user } = useAuth()
   const router = useRouter()
   const [quantity, setQuantity] = useState(1)
@@ -238,10 +238,10 @@ export function ProductModal({ open, onClose, product }: ProductModalProps) {
 
                 <button
                   onClick={handleAddToCart}
-                  disabled={isAdding || cartLoading}
+                  disabled={isAdding}
                   className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-3 text-xl h-16"
                 >
-                  {isAdding || cartLoading ? (
+                  {isAdding ? (
                     <>
                       <Loader2 className="h-6 w-6 animate-spin" />
                       Adding...
@@ -267,7 +267,7 @@ export function ProductModal({ open, onClose, product }: ProductModalProps) {
                 <Truck className="h-7 w-7 text-primary flex-shrink-0 mt-1" />
                 <div>
                   <p className="font-bold text-gray-900 text-lg">Free Delivery</p>
-                  <p className="text-gray-600">On orders above ₹500</p>
+                  <p className="text-gray-600">On orders of ₹1,500 or more</p>
                 </div>
               </div>
               <div className="flex gap-4 p-4 bg-gray-50 rounded-xl">
@@ -278,10 +278,10 @@ export function ProductModal({ open, onClose, product }: ProductModalProps) {
                 </div>
               </div>
               <div className="flex gap-4 p-4 bg-gray-50 rounded-xl">
-                <RotateCcw className="h-7 w-7 text-primary flex-shrink-0 mt-1" />
+                <Ban className="h-7 w-7 text-orange-600 flex-shrink-0 mt-1" />
                 <div>
-                  <p className="font-bold text-gray-900 text-lg">Easy Returns</p>
-                  <p className="text-gray-600">7-day return policy</p>
+                  <p className="font-bold text-gray-900 text-lg">Final Sale</p>
+                  <p className="text-gray-600">No returns or refunds</p>
                 </div>
               </div>
             </div>

@@ -1,59 +1,26 @@
-"use client"
-
-import { useEffect, useState } from "react"
-
-interface FloatingElement {
-  id: number
-  x: number
-  y: number
-  size: number
-  speed: number
-  opacity: number
-}
+const floatingElements = [
+  { id: 0, x: 12, y: 18, size: 18, duration: "7s", opacity: 0.14 },
+  { id: 1, x: 28, y: 72, size: 24, duration: "9s", opacity: 0.18 },
+  { id: 2, x: 49, y: 38, size: 14, duration: "6s", opacity: 0.12 },
+  { id: 3, x: 68, y: 84, size: 20, duration: "8s", opacity: 0.16 },
+  { id: 4, x: 84, y: 24, size: 26, duration: "10s", opacity: 0.2 },
+  { id: 5, x: 93, y: 58, size: 16, duration: "7s", opacity: 0.13 },
+]
 
 export function FloatingElements() {
-  const [elements, setElements] = useState<FloatingElement[]>([])
-
-  useEffect(() => {
-    // Create floating elements
-    const newElements: FloatingElement[] = Array.from({ length: 6 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * 20 + 10,
-      speed: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.3 + 0.1,
-    }))
-
-    setElements(newElements)
-
-    // Animate elements
-    const interval = setInterval(() => {
-      setElements((prev) =>
-        prev.map((element) => ({
-          ...element,
-          y: element.y <= -10 ? 110 : element.y - element.speed * 0.1,
-        })),
-      )
-    }, 100)
-
-    return () => clearInterval(interval)
-  }, [])
-
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {elements.map((element) => (
+    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+      {floatingElements.map((element) => (
         <div
           key={element.id}
-          className="absolute rounded-full bg-gradient-to-br from-orange-200 to-amber-200 animate-pulse"
+          className="absolute animate-pulse rounded-full bg-gradient-to-br from-orange-200 to-amber-200"
           style={{
             left: `${element.x}%`,
             top: `${element.y}%`,
             width: `${element.size}px`,
             height: `${element.size}px`,
             opacity: element.opacity,
-            transform: "translate(-50%, -50%)",
-            animationDuration: `${element.speed * 3}s`,
+            animationDuration: element.duration,
           }}
         />
       ))}

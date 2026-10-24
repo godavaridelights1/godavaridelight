@@ -314,7 +314,6 @@ export default function AdminPaymentsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Methods</SelectItem>
-                <SelectItem value="cod">Cash on Delivery</SelectItem>
                 <SelectItem value="online">Online Payment</SelectItem>
                 <SelectItem value="razorpay">Razorpay</SelectItem>
               </SelectContent>

@@ -11,7 +11,8 @@ import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ImageUpload } from "@/components/image-upload"
 import { toast } from "sonner"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
+import { updateSiteSettingsCache } from "@/hooks/use-site-settings"
 import { 
   CreditCard, 
   Loader2, 
@@ -228,6 +229,7 @@ export default function AdminSettingsPage() {
 
       const result = await response.json()
       setSiteSettings(result.data.settings)
+      updateSiteSettingsCache(result.data.settings)
       toast.success('Site settings saved successfully!')
     } catch (error: any) {
       console.error('Save error:', error)
@@ -614,16 +616,16 @@ export default function AdminSettingsPage() {
             {/* Why Godavari Delights Section Image */}
             <Card>
               <CardHeader>
-                <CardTitle>Why Godavari Delights Image</CardTitle>
+                <CardTitle>Homepage Story Image — Why Godavari Delights</CardTitle>
                 <CardDescription>
-                  Upload the image that appears in the "Why Godavari Delights?" section. Recommended size: 600x600px
+                  This image appears edge-to-edge in the homepage story section below the products. The full image keeps its proportions without cropping. For a consistent layout, use a portrait 2:3 image (recommended: 853x1280px). After uploading, click “Save Site Images” to publish it.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Upload Section */}
                   <div>
-                    <p className="text-sm font-medium mb-4">Upload New Image</p>
+                    <p className="text-sm font-medium mb-4">Replace Homepage Story Image</p>
                     <ImageUpload
                       onChange={setWhyGodavariImage}
                       value={whyGodavariImage}
@@ -633,14 +635,14 @@ export default function AdminSettingsPage() {
                   {/* Preview Section */}
                   <div>
                     <p className="text-sm font-medium mb-4">Preview</p>
-                    <div className="border rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center min-h-[250px]">
+                    <div className="border rounded-lg overflow-hidden bg-white">
                       {whyGodavariImage ? (
-                        <div className="relative w-full h-64">
+                        <div className="relative aspect-[853/1280] w-full">
                           <Image
                             src={whyGodavariImage}
-                            alt="Why Godavari Delights Preview"
+                            alt="Homepage Story Image Preview — Why Godavari Delights"
                             fill
-                            className="object-cover"
+                            className="object-contain"
                           />
                         </div>
                       ) : (

@@ -171,7 +171,7 @@ model Order {
   orderNumber     String   @unique
   status          String   @default("pending") // 'pending' | 'confirmed' | 'preparing' | 'shipped' | 'delivered' | 'cancelled'
   paymentStatus   String   @default("pending") // 'pending' | 'paid' | 'failed' | 'refunded'
-  paymentMethod   String // 'cod' | 'online'
+  paymentMethod   String // 'online'
   subtotal        Float
   discount        Float    @default(0)
   deliveryCharge  Float    @default(0)

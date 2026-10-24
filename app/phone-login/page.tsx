@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { MaintenanceOverlay } from "@/components/maintenance-overlay"
 import {
   InputOTP,
   InputOTPGroup,
@@ -115,7 +116,13 @@ export default function PhoneLoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+      <div className="relative w-full max-w-md">
+        <fieldset
+          disabled
+          aria-hidden="true"
+          className="m-0 min-w-0 w-full border-0 p-0 blur-sm"
+        >
+          <Card className="w-full max-w-md">
         {/* Header */}
         {step !== 'phone' && (
           <div className="flex items-center gap-2 p-6 border-b">
@@ -279,7 +286,14 @@ export default function PhoneLoginPage() {
             </Link>
           </p>
         </div>
-      </Card>
+          </Card>
+        </fieldset>
+        <MaintenanceOverlay>
+          <Button asChild variant="link" className="text-primary">
+            <Link href="/login">Use email login</Link>
+          </Button>
+        </MaintenanceOverlay>
+      </div>
     </div>
   )
 }

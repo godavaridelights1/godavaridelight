@@ -25,7 +25,7 @@ export default function AdminCategoriesPage() {
   const fetchCategories = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/products')
+      const response = await fetch('/api/products?includeImages=false')
       if (!response.ok) throw new Error('Failed to fetch products')
       const data = await response.json()
       

@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Loader2, Package, AlertTriangle, CheckCircle, Search } from "lucide-react"
 import { toast } from "sonner"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 
 interface Product {
   id: string

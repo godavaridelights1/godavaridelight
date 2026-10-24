@@ -1,6 +1,5 @@
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Award, Users, Heart, Leaf } from "lucide-react"
@@ -240,7 +239,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <Footer />
     </div>
   )
 }

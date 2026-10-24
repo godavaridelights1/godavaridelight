@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { PromotionService } from "@/lib/promotion-service"
 import type { Promotion } from "@/lib/types"
-import Image from "next/image"
+import { ResponsiveImage } from "@/components/responsive-image"
 
 export function PromotionPopup() {
   const [popup, setPopup] = useState<Promotion | null>(null)
@@ -55,7 +55,7 @@ export function PromotionPopup() {
 
         <div className="space-y-4">
           <div className="relative w-full h-48 rounded-lg overflow-hidden">
-            <Image src={popup.image || "/placeholder.svg"} alt={popup.title} fill className="object-cover" />
+            <ResponsiveImage src={popup.image || "/placeholder.svg"} alt={popup.title} fill sizes="(max-width: 448px) 100vw, 448px" className="object-cover" />
           </div>
 
           <div className="text-center space-y-2">

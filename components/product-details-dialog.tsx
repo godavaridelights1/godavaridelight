@@ -1,12 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
+import { ResponsiveImage as Image } from "@/components/responsive-image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Star, ShoppingCart, Heart, Loader2, X, Plus, Minus, Truck, Shield, RotateCcw } from "lucide-react"
+import { Star, ShoppingCart, Heart, Loader2, X, Plus, Minus, Truck, Shield, Ban } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/hooks/use-auth"
 import { useRouter } from "next/navigation"
@@ -20,7 +20,7 @@ interface ProductDetailsDialogProps {
 }
 
 export function ProductDetailsDialog({ open, onOpenChange, product }: ProductDetailsDialogProps) {
-  const { addToCart, isLoading: cartLoading } = useCart()
+  const { addToCart } = useCart()
   const { user } = useAuth()
   const router = useRouter()
   const [quantity, setQuantity] = useState(1)
@@ -235,11 +235,11 @@ export function ProductDetailsDialog({ open, onOpenChange, product }: ProductDet
                 <div className="flex flex-col gap-3 pt-2">
                   <Button
                     onClick={handleAddToCart}
-                    disabled={!displayProduct.inStock || isAdding || cartLoading}
+                    disabled={!displayProduct.inStock || isAdding}
                     className="w-full text-base sm:text-lg py-5 sm:py-6 font-semibold"
                     size="lg"
                   >
-                    {isAdding || cartLoading ? (
+                    {isAdding ? (
                       <>
                         <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                         Adding...
@@ -269,7 +269,7 @@ export function ProductDetailsDialog({ open, onOpenChange, product }: ProductDet
                   <Truck className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold text-sm sm:text-base">Free Delivery</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">On orders above ₹500</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">On orders of ₹1,500 or more</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -280,10 +280,10 @@ export function ProductDetailsDialog({ open, onOpenChange, product }: ProductDet
                   </div>
                 </div>
                 <div className="flex gap-3">
-                  <RotateCcw className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0 mt-0.5" />
+                  <Ban className="h-5 w-5 sm:h-6 sm:w-6 text-orange-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-sm sm:text-base">Easy Returns</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">7-day return policy</p>
+                    <p className="font-semibold text-sm sm:text-base">Final Sale</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">No returns or refunds</p>
                   </div>
                 </div>
               </div>
