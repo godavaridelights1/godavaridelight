@@ -135,13 +135,14 @@ export default function ContactPage() {
                       <strong>Landmark:</strong> Near Atreyapuram, opposite to SBI Bank
                     </p>
                     <p className="text-sm">
+                      <strong>Precise location:</strong>{" "}
                       <a
                         href="https://maps.app.goo.gl/NHHbxg74eSqvhLkm6"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-medium text-orange-700 underline underline-offset-4 hover:text-orange-800"
                       >
-                        Precice location
+                        Open exact location in Google Maps
                       </a>
                     </p>
                   </div>
