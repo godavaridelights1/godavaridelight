@@ -10,7 +10,6 @@ import { toast } from "sonner"
 interface UploadedImage {
   id?: string
   url: string
-  file?: File
   altText?: string
   isPrimary?: boolean
   displayOrder?: number
@@ -29,7 +28,7 @@ export function MultiImageUpload({
   onImagesChange,
   onImageDelete,
   maxImages = 10,
-  maxFileSize = 5, // 5MB
+  maxFileSize = 4,
 }: MultiImageUploadProps) {
   const [images, setImages] = useState<UploadedImage[]>(initialImages)
   const [isUploading, setIsUploading] = useState(false)
@@ -44,53 +43,69 @@ export function MultiImageUpload({
 
   const handleFiles = useCallback(
     async (files: FileList) => {
-      const newImages: UploadedImage[] = []
+      if (isUploading) return
+      setIsUploading(true)
+      let updatedImages = [...images]
+      let uploadedCount = 0
 
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
+      try {
+        for (const file of Array.from(files)) {
+          if (updatedImages.length >= maxImages) {
+            toast.error(`Maximum ${maxImages} images allowed`)
+            break
+          }
 
-        // Validate file size
-        if (file.size > maxFileSize * 1024 * 1024) {
-          toast.error(`File ${file.name} is too large. Max size is ${maxFileSize}MB`)
-          continue
-        }
+          if (file.size > maxFileSize * 1024 * 1024) {
+            toast.error(`File ${file.name} is too large. Max size is ${maxFileSize}MB`)
+            continue
+          }
 
-        // Validate file type
-        if (!file.type.startsWith("image/")) {
-          toast.error(`File ${file.name} is not an image`)
-          continue
-        }
+          const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
+          if (!allowedTypes.includes(file.type)) {
+            toast.error(`File ${file.name} is not a supported image`)
+            continue
+          }
 
-        // Check if we've reached max images
-        if (images.length + newImages.length >= maxImages) {
-          toast.error(`Maximum ${maxImages} images allowed`)
-          break
-        }
+          const formData = new FormData()
+          formData.append("file", file)
+          const response = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          })
 
-        // Create preview URL
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const url = e.target?.result as string
+          let result: { url?: string; error?: string } | null = null
+          try {
+            result = await response.json()
+          } catch {
+            throw new Error(`Failed to upload ${file.name} (HTTP ${response.status})`)
+          }
+          if (!response.ok || !result?.url) {
+            throw new Error(result?.error || `Failed to upload ${file.name}`)
+          }
+
           const newImage: UploadedImage = {
             id: `new-${Date.now()}-${Math.random()}`,
-            url,
-            file,
-            isPrimary: images.length + newImages.length === 0,
-            displayOrder: images.length + newImages.length,
+            url: result.url,
+            isPrimary: updatedImages.length === 0,
+            displayOrder: updatedImages.length,
           }
-          newImages.push(newImage)
-
-          if (newImages.length === Object.keys(files).length) {
-            const updatedImages = [...images, ...newImages]
-            setImages(updatedImages)
-            onImagesChange(updatedImages)
-            toast.success(`${newImages.length} image(s) added`)
-          }
+          updatedImages = [...updatedImages, newImage]
+          setImages(updatedImages)
+          onImagesChange(updatedImages)
+          uploadedCount += 1
         }
-        reader.readAsDataURL(file)
+      } catch (error) {
+        console.error("Product image upload error:", error)
+        toast.error(error instanceof Error ? error.message : "Failed to upload product image")
+      } finally {
+        setIsUploading(false)
+      }
+
+      if (uploadedCount > 0) {
+        toast.success(`${uploadedCount} image(s) uploaded`)
       }
     },
-    [images, maxImages, maxFileSize, onImagesChange]
+    [images, isUploading, maxImages, maxFileSize, onImagesChange]
   )
 
   const handleDrag = useCallback(
@@ -198,7 +213,7 @@ export function MultiImageUpload({
             Drag and drop your images here
           </p>
           <p className="text-sm text-gray-600 mb-4">
-            or click to browse
+            {isUploading ? "Uploading images..." : "or click to browse"}
           </p>
           <Button
             type="button"

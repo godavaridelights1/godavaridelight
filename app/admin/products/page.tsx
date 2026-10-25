@@ -20,6 +20,20 @@ import { toast } from "sonner"
 import { ResponsiveImage as Image } from "@/components/responsive-image"
 import type { Product } from "@/lib/types"
 
+async function getResponseError(response: Response, fallback: string) {
+  const responseText = await response.text()
+  if (response.status === 413) {
+    return "The request is too large. Product images are uploaded separately; please retry with fewer or smaller images."
+  }
+
+  try {
+    const body = JSON.parse(responseText) as { error?: string }
+    return body.error || fallback
+  } catch {
+    return responseText || fallback
+  }
+}
+
 export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
@@ -122,8 +136,7 @@ export default function AdminProductsPage() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Failed to add product')
+        throw new Error(await getResponseError(response, 'Failed to add product'))
       }
 
       const result = await response.json()
@@ -176,8 +189,7 @@ export default function AdminProductsPage() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Failed to update product')
+        throw new Error(await getResponseError(response, 'Failed to update product'))
       }
 
       const result = await response.json()
