@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -19,6 +19,13 @@ import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye, Package, TrendingUp, L
 import { toast } from "sonner"
 import { ResponsiveImage as Image } from "@/components/responsive-image"
 import type { Product } from "@/lib/types"
+
+const productCategories = [
+  "Traditional Putharekulu",
+  "Premium Collection",
+  "Festival Specials",
+  "Gift Hampers",
+]
 
 async function getResponseError(response: Response, fallback: string) {
   const responseText = await response.text()
@@ -357,6 +364,9 @@ export default function AdminProductsPage() {
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Product</DialogTitle>
+                <DialogDescription>
+                  Add product details, select a category, and upload product images.
+                </DialogDescription>
               </DialogHeader>
               <form action={handleAddProduct} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -371,10 +381,9 @@ export default function AdminProductsPage() {
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Traditional Putharekulu">Traditional Putharekulu</SelectItem>
-                        <SelectItem value="Premium Collection">Premium Collection</SelectItem>
-                        <SelectItem value="Festival Specials">Festival Specials</SelectItem>
-                        <SelectItem value="Gift Hampers">Gift Hampers</SelectItem>
+                        {productCategories.map((category) => (
+                          <SelectItem key={category} value={category}>{category}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -596,6 +605,9 @@ export default function AdminProductsPage() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit Product</DialogTitle>
+              <DialogDescription>
+                Update the product details, category, images, and inventory settings.
+              </DialogDescription>
             </DialogHeader>
             {selectedProduct && (
               <form action={handleEditProduct} className="space-y-4">
@@ -606,15 +618,23 @@ export default function AdminProductsPage() {
                   </div>
                   <div>
                     <Label htmlFor="edit-category">Category</Label>
-                    <Select name="category" defaultValue={selectedProduct.category}>
+                    <Select
+                      name="category"
+                      defaultValue={selectedProduct.category || productCategories[0]}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value=""></SelectItem>
-                        <SelectItem value="Premium Collection">Premium Collection</SelectItem>
-                        <SelectItem value="Festival Specials">Festival Specials</SelectItem>
-                        <SelectItem value="Gift Hampers">Gift Hampers</SelectItem>
+                        {selectedProduct.category &&
+                          !productCategories.includes(selectedProduct.category) && (
+                            <SelectItem value={selectedProduct.category}>
+                              {selectedProduct.category}
+                            </SelectItem>
+                          )}
+                        {productCategories.map((category) => (
+                          <SelectItem key={category} value={category}>{category}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
