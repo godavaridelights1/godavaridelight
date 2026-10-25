@@ -6,6 +6,13 @@ import ProductsClient from "@/components/products-client"
 async function getProducts(): Promise<Product[]> {
   try {
     const products = await prisma.product.findMany({
+      where: {
+        OR: [
+          { isArchived: false },
+          { isArchived: { isSet: false } },
+          { isArchived: null },
+        ],
+      },
       select: {
         id: true,
         name: true,
@@ -36,7 +43,7 @@ async function getProducts(): Promise<Product[]> {
     }))
   } catch (error) {
     console.error("Error fetching products:", error)
-    return []
+    throw error
   }
 }
 
@@ -45,4 +52,4 @@ export default async function ProductsPage() {
   return <ProductsClient initialProducts={products} />
 }
 
-export const revalidate = 60
+export const revalidate = 0

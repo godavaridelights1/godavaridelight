@@ -61,7 +61,7 @@ export function MultiImageUpload({
             continue
           }
 
-          const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"]
+          const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
           if (!allowedTypes.includes(file.type)) {
             toast.error(`File ${file.name} is not a supported image`)
             continue
@@ -203,7 +203,7 @@ export function MultiImageUpload({
             ref={inputRef}
             type="file"
             multiple
-            accept="image/*"
+            accept="image/jpeg,image/png,image/webp"
             onChange={handleChange}
             className="hidden"
             disabled={isUploading}

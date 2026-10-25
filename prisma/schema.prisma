@@ -90,6 +90,7 @@ model Product {
   category        String
   inStock         Boolean   @default(true)
   featured        Boolean   @default(false)
+  isArchived      Boolean?  @default(false)
   weight          String?
   ingredients     String[]
   nutritionalInfo Json?

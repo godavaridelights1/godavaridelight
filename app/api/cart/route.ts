@@ -67,6 +67,10 @@ export async function POST(request: NextRequest) {
       return apiError('Product not found', 404)
     }
 
+    if (product.isArchived) {
+      return apiError('Product is no longer available', 400)
+    }
+
     if (!product.inStock) {
       return apiError('Product is out of stock', 400)
     }

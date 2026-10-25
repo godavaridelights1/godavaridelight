@@ -8,6 +8,7 @@ export interface Product {
   category: string
   inStock: boolean
   featured: boolean
+  isArchived?: boolean
   weight?: string
   ingredients?: string[]
   averageRating?: number
@@ -22,7 +23,7 @@ export interface Product {
 export interface ProductImage {
   id: string
   productId: string
-  imageUrl: string
+  url: string
   altText?: string
   displayOrder: number
   isPrimary: boolean

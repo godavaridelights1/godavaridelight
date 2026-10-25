@@ -17,9 +17,20 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const limit = searchParams.get('limit')
     const includeImages = searchParams.get('includeImages') !== 'false'
+    const includeArchivedRequested = searchParams.get('includeArchived') === 'true'
+    const adminResult = includeArchivedRequested ? await requireAdmin(request) : null
+    if (adminResult instanceof Response) return adminResult
 
     // Build Prisma where clause
-    const where: any = {}
+    const where: any = includeArchivedRequested
+      ? {}
+      : {
+          OR: [
+            { isArchived: false },
+            { isArchived: { isSet: false } },
+            { isArchived: null },
+          ],
+        }
 
     if (category && category !== 'all') {
       where.category = { contains: category, mode: 'insensitive' }
@@ -34,9 +45,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+      where.AND = [
+        ...(where.AND || []),
+        {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' } },
+            { description: { contains: search, mode: 'insensitive' } }
+          ]
+        }
       ]
     }
 
@@ -74,6 +90,7 @@ export async function GET(request: NextRequest) {
         category: product.category,
         inStock: product.inStock,
         featured: product.featured,
+        isArchived: product.isArchived,
         weight: product.weight,
         ingredients: product.ingredients,
         nutritionalInfo: product.nutritionalInfo,

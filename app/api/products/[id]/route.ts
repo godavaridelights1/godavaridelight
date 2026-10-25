@@ -32,13 +32,21 @@ export async function GET(
     if (!product) {
       return apiError('Product not found', 404)
     }
+    if (product.isArchived) {
+      return apiError('Product not found', 404)
+    }
 
     // Get related products (same category, different product)
     const relatedProducts = await prisma.product.findMany({
       where: {
         category: product.category,
         id: { not: params.id },
-        inStock: true
+        inStock: true,
+        OR: [
+          { isArchived: false },
+          { isArchived: { isSet: false } },
+          { isArchived: null },
+        ],
       },
       include: {
         images: true,
@@ -114,6 +122,7 @@ export async function PUT(
       featured,
       weight,
       ingredients,
+      isArchived,
       imagesToDelete
     } = body
 
@@ -128,6 +137,7 @@ export async function PUT(
     if (featured !== undefined) updateData.featured = featured
     if (weight !== undefined) updateData.weight = weight
     if (ingredients !== undefined) updateData.ingredients = ingredients
+    if (isArchived !== undefined) updateData.isArchived = Boolean(isArchived)
 
     // Handle image updates
     if (images && Array.isArray(images) && images.length > 0) {
@@ -165,8 +175,8 @@ export async function PUT(
             productId: params.id,
             url: img.url,
             altText: img.altText || name,
-            isPrimary: img.isPrimary || (idx === 0 && existingImages.length === 0),
-            displayOrder: img.displayOrder || idx
+            isPrimary: img.isPrimary ?? (idx === 0 && existingImages.length === 0),
+            displayOrder: img.displayOrder ?? idx
           }))
         })
       }
@@ -177,8 +187,8 @@ export async function PUT(
           where: { id: img.id },
           data: {
             altText: img.altText || name,
-            isPrimary: img.isPrimary || false,
-            displayOrder: img.displayOrder || 0
+            isPrimary: img.isPrimary ?? false,
+            displayOrder: img.displayOrder ?? 0
           }
         })
       }
@@ -215,30 +225,37 @@ export async function DELETE(
     const authResult = await requireAdmin(request)
     if (authResult instanceof Response) return authResult
 
-    // Get product to check for image
     const product = await prisma.product.findUnique({
       where: { id: params.id },
-      select: { image: true }
-    })
-
-    // Delete product from database (cascade will delete related images and reviews)
-    await prisma.product.delete({
-      where: { id: params.id }
-    })
-
-    // Delete image file from local storage if it exists
-    if (product?.image && product.image.startsWith('/uploads/')) {
-      try {
-        const fs = require('fs/promises')
-        const path = require('path')
-        const filename = product.image.split('/uploads/')[1]
-        const filepath = path.join(process.cwd(), 'public', 'uploads', filename)
-        await fs.unlink(filepath).catch(() => {}) // Ignore if file doesn't exist
-      } catch (imgError) {
-        console.error('Failed to delete image from storage:', imgError)
-        // Don't fail the whole operation if image deletion fails
+      select: {
+        id: true,
+        _count: { select: { orderItems: true } },
       }
+    })
+
+    if (!product) {
+      return apiError('Product not found', 404)
     }
+
+    if (product._count.orderItems > 0) {
+      await prisma.$transaction([
+        prisma.cartItem.deleteMany({ where: { productId: params.id } }),
+        prisma.product.update({
+          where: { id: params.id },
+          data: { isArchived: true, inStock: false, featured: false },
+        }),
+      ])
+
+      revalidatePath('/')
+      revalidatePath('/products')
+      revalidatePath('/admin/products')
+      return apiResponse({
+        message: 'Product archived to preserve its order history',
+        archived: true,
+      })
+    }
+
+    await prisma.product.delete({ where: { id: params.id } })
 
     // Revalidate paths to clear cache
     revalidatePath('/')

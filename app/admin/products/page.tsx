@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { AdminHeader } from "@/components/admin-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { ImageUpload } from "@/components/image-upload"
 import { MultiImageUpload } from "@/components/multi-image-upload"
 import { RichTextEditor } from "@/components/rich-text-editor"
@@ -48,32 +54,19 @@ export default function AdminProductsPage() {
   const [productList, setProductList] = useState<Product[]>([])
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
+  const [editLoading, setEditLoading] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [newProductImages, setNewProductImages] = useState<Array<{ url: string; altText?: string; isPrimary?: boolean }>>([])
   const [editProductImages, setEditProductImages] = useState<Array<{ id?: string; url: string; altText?: string; isPrimary?: boolean }>>([])
   const [imagesToDelete, setImagesToDelete] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null)
   const [newDescription, setNewDescription] = useState("")
   const [editDescription, setEditDescription] = useState("")
   const [newIngredients, setNewIngredients] = useState<string[]>([])
   const [editIngredients, setEditIngredients] = useState<string[]>([])
   const [newIngredientInput, setNewIngredientInput] = useState("")
   const [editIngredientInput, setEditIngredientInput] = useState("")
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setOpenDropdownId(null)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
   // Fetch products from API
   useEffect(() => {
     fetchProducts()
@@ -82,7 +75,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/products?includeImages=false', {
+      const response = await fetch('/api/products?includeImages=false&includeArchived=true', {
         cache: 'no-store'
       })
       if (!response.ok) throw new Error('Failed to fetch products')
@@ -97,17 +90,21 @@ export default function AdminProductsPage() {
   }
 
   const filteredProducts = productList.filter((product) => {
-    if (!product || !product.name || !product.description || !product.category) return false
-    
+    if (!product || !product.name) return false
+
+    const name = product.name.toLowerCase()
+    const description = (product.description ?? "").toLowerCase()
+    const category = (product.category ?? "").toLowerCase()
     const matchesSearch =
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      name.includes(searchQuery.toLowerCase()) ||
+      description.includes(searchQuery.toLowerCase())
     const matchesCategory =
-      categoryFilter === "all" || product.category.toLowerCase().includes(categoryFilter.toLowerCase())
+      categoryFilter === "all" || category.includes(categoryFilter.toLowerCase())
     const matchesStatus =
       statusFilter === "all" ||
+      (statusFilter === "archived" && product.isArchived) ||
       (statusFilter === "in-stock" && product.inStock) ||
-      (statusFilter === "out-of-stock" && !product.inStock)
+      (statusFilter === "out-of-stock" && !product.inStock && !product.isArchived)
 
     return matchesSearch && matchesCategory && matchesStatus
   })
@@ -218,7 +215,7 @@ export default function AdminProductsPage() {
   }
 
   const handleDeleteProduct = async (productId: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm('Remove this product from the store? Products with order history will be archived so past orders remain intact.')) return
 
     try {
       const response = await fetch(`/api/products/${productId}`, {
@@ -226,33 +223,88 @@ export default function AdminProductsPage() {
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Failed to delete product')
+        throw new Error(await getResponseError(response, 'Failed to delete product'))
       }
 
-      setProductList((prev) => prev.filter((p) => p.id !== productId))
-      toast.success("Product deleted successfully!")
+      const result = await response.json()
+      if (result.data?.archived) {
+        setProductList((prev) =>
+          prev.map((product) =>
+            product.id === productId
+              ? { ...product, isArchived: true, inStock: false, featured: false }
+              : product
+          )
+        )
+        toast.success("Product archived; its past order history is preserved.")
+      } else {
+        setProductList((prev) => prev.filter((p) => p.id !== productId))
+        toast.success("Product deleted successfully!")
+      }
     } catch (error: any) {
       console.error('Delete product error:', error)
       toast.error(error.message || 'Failed to delete product')
     }
   }
 
-  const openEditDialog = (product: Product) => {
+  const handleRestoreProduct = async (product: Product) => {
+    try {
+      const response = await fetch(`/api/products/${product.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isArchived: false }),
+      })
+
+      if (!response.ok) {
+        throw new Error(await getResponseError(response, 'Failed to restore product'))
+      }
+
+      const result = await response.json()
+      setProductList((prev) => prev.map((item) => item.id === product.id ? result.data : item))
+      toast.success("Product restored. Set it in stock to show it in the store.")
+    } catch (error) {
+      console.error('Restore product error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to restore product')
+    }
+  }
+
+  const openEditDialog = async (product: Product) => {
     setSelectedProduct(product)
-    // Convert existing images to the format needed for MultiImageUpload
-    const existingImages = (product as any).images?.map((img: any) => ({
-      id: img.id,
-      url: img.url,
-      altText: img.altText,
-      isPrimary: img.isPrimary
-    })) || [{ url: product.image, altText: product.name, isPrimary: true }]
-    setEditProductImages(existingImages)
+    setEditProductImages([])
     setImagesToDelete([])
     setEditDescription(product.description || "")
     setEditIngredients((product as any).ingredients || [])
     setEditIngredientInput("")
     setIsEditOpen(true)
+    setEditLoading(true)
+
+    try {
+      const response = await fetch(`/api/products/${product.id}`, { cache: 'no-store' })
+      if (!response.ok) {
+        throw new Error(await getResponseError(response, 'Failed to load product images'))
+      }
+      const result = await response.json()
+      const productDetails = result.data as Product
+      setSelectedProduct(productDetails)
+      setEditDescription(productDetails.description || "")
+      setEditIngredients(productDetails.ingredients || [])
+      setEditProductImages(
+        productDetails.images?.length
+          ? productDetails.images.map((image, index) => ({
+              id: image.id,
+              url: image.url,
+              altText: image.altText,
+              isPrimary: image.isPrimary,
+              displayOrder: image.displayOrder ?? index,
+            }))
+          : [{ url: productDetails.image, altText: productDetails.name, isPrimary: true }]
+      )
+    } catch (error) {
+      console.error('Load product details error:', error)
+      toast.error(error instanceof Error ? error.message : 'Failed to load product details')
+      setIsEditOpen(false)
+    } finally {
+      setEditLoading(false)
+    }
   }
 
   return (
@@ -349,6 +401,7 @@ export default function AdminProductsPage() {
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="in-stock">In Stock</SelectItem>
                   <SelectItem value="out-of-stock">Out of Stock</SelectItem>
+                  <SelectItem value="archived">Archived</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -513,7 +566,23 @@ export default function AdminProductsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredProducts.map((product) => (
+                  {filteredProducts.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="py-10 text-center">
+                        {productList.length === 0 ? (
+                          <div className="space-y-3">
+                            <p className="text-muted-foreground">No products yet. Add a food product to show it in the store.</p>
+                            <Button type="button" variant="outline" onClick={() => setIsAddOpen(true)}>
+                              <Plus className="mr-2 h-4 w-4" />
+                              Add your first product
+                            </Button>
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground">No products match these filters.</p>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ) : filteredProducts.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell className="min-w-[200px]">
                         <div className="flex items-center space-x-3">
@@ -551,47 +620,44 @@ export default function AdminProductsPage() {
                               Featured
                             </Badge>
                           )}
-                          <Badge variant={product.inStock ? "default" : "destructive"} className="text-xs">
-                            {product.inStock ? "Active" : "Inactive"}
-                          </Badge>
+                          {product.isArchived ? (
+                            <Badge variant="outline" className="text-xs">Archived</Badge>
+                          ) : (
+                            <Badge variant={product.inStock ? "default" : "destructive"} className="text-xs">
+                              {product.inStock ? "Active" : "Inactive"}
+                            </Badge>
+                          )}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="relative inline-block" ref={openDropdownId === product.id ? dropdownRef : null}>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => setOpenDropdownId(openDropdownId === product.id ? null : product.id)}
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                          {openDropdownId === product.id && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-                              <div className="py-1">
-                                <button
-                                  onClick={() => {
-                                    openEditDialog(product)
-                                    setOpenDropdownId(null)
-                                  }}
-                                  className="flex items-center w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                >
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit Product
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    handleDeleteProduct(product.id)
-                                    setOpenDropdownId(null)
-                                  }}
-                                  className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete Product
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" aria-label={`Actions for ${product.name}`}>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" side="top" className="w-48">
+                            <DropdownMenuItem
+                              disabled={product.isArchived}
+                              onSelect={() => void openEditDialog(product)}
+                            >
+                              <Edit className="h-4 w-4" />
+                              Edit Product
+                            </DropdownMenuItem>
+                            {product.isArchived && (
+                              <DropdownMenuItem onSelect={() => void handleRestoreProduct(product)}>
+                                Restore Product
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              variant="destructive"
+                              onSelect={() => void handleDeleteProduct(product.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              Delete Product
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                   </TableRow>
                 ))}
@@ -610,6 +676,12 @@ export default function AdminProductsPage() {
               </DialogDescription>
             </DialogHeader>
             {selectedProduct && (
+              editLoading ? (
+                <div className="flex items-center justify-center gap-2 py-12 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Loading product images...
+                </div>
+              ) : (
               <form action={handleEditProduct} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -752,6 +824,7 @@ export default function AdminProductsPage() {
                   )}
                 </Button>
               </form>
+              )
             )}
           </DialogContent>
         </Dialog>

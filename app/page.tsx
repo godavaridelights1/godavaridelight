@@ -25,7 +25,14 @@ import { getProductImageUrl } from "@/lib/product-image"
 async function getHomepageProducts() {
   try {
     const products = await prisma.product.findMany({
-      where: { inStock: true },
+      where: {
+        inStock: true,
+        OR: [
+          { isArchived: false },
+          { isArchived: { isSet: false } },
+          { isArchived: null },
+        ],
+      },
       select: {
         id: true,
         name: true,
@@ -56,7 +63,7 @@ async function getHomepageProducts() {
     }))
   } catch (error) {
     console.error("Error fetching homepage products:", error)
-    return []
+    throw error
   }
 }
 
@@ -313,4 +320,4 @@ export default async function HomePage() {
 }
 
 // Revalidate every 60 seconds to pick up new products
-export const revalidate = 60
+export const revalidate = 0
