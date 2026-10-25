@@ -131,16 +131,32 @@ export async function PUT(
 
     // Handle image updates
     if (images && Array.isArray(images) && images.length > 0) {
+      const productImages = await prisma.productImage.findMany({
+        where: { productId: params.id },
+        select: { id: true },
+      })
+      const productImageIds = new Set(productImages.map((productImage) => productImage.id))
+      const deletedImageIds = new Set<string>(
+        Array.isArray(imagesToDelete)
+          ? imagesToDelete.filter(
+              (imageId: unknown): imageId is string =>
+                typeof imageId === 'string' && productImageIds.has(imageId)
+            )
+          : []
+      )
+
       // Delete specified images
-      if (imagesToDelete && Array.isArray(imagesToDelete) && imagesToDelete.length > 0) {
+      if (deletedImageIds.size > 0) {
         await prisma.productImage.deleteMany({
-          where: { id: { in: imagesToDelete } }
+          where: { id: { in: [...deletedImageIds] }, productId: params.id }
         })
       }
 
-      // Separate new images from existing ones
-      const newImages = images.filter((img: any) => !img.id) // New images don't have id
-      const existingImages = images.filter((img: any) => img.id) // Existing images have id
+      const existingImages = images.filter(
+        (img: any) => typeof img.id === 'string' && productImageIds.has(img.id) && !deletedImageIds.has(img.id)
+      )
+      const existingImageIds = new Set(existingImages.map((img: any) => img.id))
+      const newImages = images.filter((img: any) => !existingImageIds.has(img.id))
 
       // Create new images
       if (newImages.length > 0) {

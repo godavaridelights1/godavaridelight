@@ -9,6 +9,7 @@ import { toast } from "sonner"
 
 interface UploadedImage {
   id?: string
+  clientKey?: string
   url: string
   altText?: string
   isPrimary?: boolean
@@ -84,7 +85,7 @@ export function MultiImageUpload({
           }
 
           const newImage: UploadedImage = {
-            id: `new-${Date.now()}-${Math.random()}`,
+            clientKey: `new-${Date.now()}-${Math.random()}`,
             url: result.url,
             isPrimary: updatedImages.length === 0,
             displayOrder: updatedImages.length,
@@ -240,7 +241,7 @@ export function MultiImageUpload({
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {images.map((image, index) => (
-              <div key={image.id} className="relative group rounded-lg overflow-hidden border border-gray-200">
+              <div key={image.id ?? image.clientKey ?? index} className="relative group rounded-lg overflow-hidden border border-gray-200">
                 {/* Image */}
                 <div className="relative w-full h-32 bg-gray-100">
                   <Image
